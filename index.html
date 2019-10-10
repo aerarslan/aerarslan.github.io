@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <title>Guide of Istanbul</title>
+    <link rel="stylesheet" href="css/bar.css" />
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link href="https://fonts.googleapis.com/css?family=Cabin:400,600" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+    <link rel="stylesheet" href="css/bar.css" />
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/custom.css" />
+    
+</head>    
+
+<body>
+    <div class ="wrapper">    
+        <header>
+            <div class="container">
+                <div class="logo">
+                    <span>
+                        <a href="index.html">
+                            <img src=" img/logo.jpg" width="200" />
+                        </a>
+                    </span>
+                </div>
+                <nav>
+                    <ul id="menu">
+                        <li><a href="index.html">HOME PAGE</a></li>
+                        <li><a href="aboutus.html">ABOUT US</a></li>
+                    </ul>  
+                    <div class="clear"></div>
+                </nav>
+            </div>
+            
+        </header>   
+    <div class="slider">
+        <div><img src="img/slider/bosphorus.jpg" title="Bosphorus Bridge"></div>
+        <div><img src="img/slider/sultanahmet.jpg" title="Sultan Ahmed Mosque"></div>
+        <div><img src="img/slider/sunset.jpg" title="Sunset in Istanbul">
+        </div>
+        <div><img src="img/slider/ist.jpg" title="Istanbul">
+        </div>
+        
+    </div> 
+    <div class="content">
+            
+        <h1 class="title">↓ THE GUIDE OF ISTANBUL ↓</h1>
+            
+        <div class="container2">
+            <div class="box">
+                <div class="img"><a href="food/food.html"><img src="img/menu/food.jpg"/></a></div>
+                <div class="title"><a href="food/food.html">Food and Drinks</a></div>
+                        
+            </div>
+            <div class="box">
+                <div class="img"><a href="planning/planning.html"><img src="img/menu/planning.jpg"/></a></div>
+                <div class="title"><a href="planning/planning.html">Planning</a></div>
+                      
+            </div>
+            <div class="box">
+                 <div class="img"><a href="shopping/shopping.html"><img src="img/menu/shopping.jpg"/></a></div>
+                <div class="title"><a href="shopping/shopping.html">Shopping</a></div>
+                        
+             </div>
+            <div class="box">
+                <div class="img"><a href="sightseeing/sightseeing.html"><img src="img/menu/sightseeing.jpg"/></a></div>
+                <div class="title"><a href="sightseeing/sightseeing.html">Sightseeing</a></div>
+                        
+            </div>
+            <div class="box">
+                <div class="img"><a href="https://www.getyourguide.com/s/?q=Istanbul%2C%20Turkey&customerSearch=1&searchSource=2" target="_blank"><img src="img/menu/tours.jpg"/></a></div>
+                <div class="title"><a href="https://www.getyourguide.com/s/?q=Istanbul%2C%20Turkey&customerSearch=1&searchSource=2" target="_blank">Tours</a></div>
+                       
+             </div>
+            <div class="box">
+                 <div class="img"><a href="map/map.html"><img src="img/menu/map.jpg"/></a></div>
+                <div class="title"><a href="map/map.html">Map</a></div>
+                    
+             </div>
+                
+        </div>          
+    </div>
+    <footer>
+        <span>ISTANBUL</span>  
+    </footer> 
+    </div>
+    <!-- --- MainSideBar --- -->
+    <div class="mainBar">
+        <div id="myMainnav" class="mainnav">
+              <a href="javascript:void(0)" class="closebtn" onclick="closeMainNav()">&times;</a>
+              <a href="food/food.html">Food and Drinks</a>
+              <a href="planning/planning.html">Planning</a>
+              <a href="shopping/shopping.html">Shopping</a>
+              <a href="sightseeing/sightseeing.html">Sightseeing</a>
+              <a href="https://www.getyourguide.com/s/?q=Istanbul%2C%20Turkey&customerSearch=1&searchSource=2" target="_blank">Tours</a>
+              <a href="map/map.html">Map</a>
+        </div>
+    
+        <h2>Click to see Guides</h2>
+        <span style="font-size:30px;cursor:pointer" onclick="openMainNav()">&#9776; GUIDES</span>
+    
+    </div>
+    
+    <!-- --- SideBar --- -->
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="index.html">HOME PAGE</a>
+        <a href="aboutus.html">CONTACT US</a>
+    </div>
+
+    <div id="main">
+        <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; MENU</span>
+    </div>
+    
+    
+    <script src="js/bar.js"></script>
+    <script>
+    $(document).ready(function(){
+      $('.slider').bxSlider({  
+        mode: 'fade',
+        captions: true,
+        pagerCustom: '#bx-pager',
+        adaptiveHeight: true,
+        auto: true,
+         
+      });
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+.clear{
+    clear: both;
+}
+.container{
+    max-width: 1000px;
+    margin: 0 auto;
+    overflow: hidden;
+    
+}
+.container2{
+    max-width: 1300px;
+    margin: 0 auto;
+    overflow: hidden;
+    
+}
+ul, li{
+    padding;0;
+}
+li{
+    list-style: none;
+}
+a {
+    text-decoration: none;
+}
+body{
+    font-family: 'Cabin', sans-serif;
+    font-size: 14px;
+}
+
+/* ---- HEADER ---- */
+
+header {
+    background: #D8D8D8;
+   
+}
+header .logo{
+    width: 50px;
+    margin: 0 auto;
+    color: #1CD67C;
+    font-size: 24px;
+    float:left;
+    padding: 10px;
+}
+
+.logo span a img{
+    border-radius: 10px;
+}
+header nav ul{
+    width: 300px;
+    margin: 35px auto 25px auto;
+    float: right;
+    
+}
+header nav ul li{
+    float: left;
+    padding: 11px;
+    font-size: 20px;
+    
+}
+header nav ul li a {
+    color: #6E6E6E;
+    border-radius: 45px;
+    display: block;
+    padding: 5px 10px;
+}
+header nav ul li a:hover{
+    background-color: #FAFAFA;
+    color: #424242;
+}
+
+
+
+/* ---- GUIDE OF ISTANBUL CONTENT ---- */
+
+.content .box{
+    background: #fff;
+    border: 1px;
+    width: 33%;
+    float: left;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+}
+.content .box img{
+    width:100%;
+}
+.content .box .title {
+    color:#6E6E6E;
+    font-size: 20px;
+    padding: 5px;
+    
+}
+
+.content .box .title:hover{
+    text-decoration: underline;
+    font-weight: 600;
+    cursor: pointer;
+    
+}
+.content h1.title {
+    background: #D8D8D8;
+    padding: 10px;
+    font-size: 36px;
+    color: #6338AE;
+    text-align: center;
+    
+}
+footer{
+    background: #F0E9DC; 
+    color: #6F5F5C;
+    text-align: center;
+    padding: 15px;
+    font-size: 18px;
+}
+
+/* ---- IF MAX WIDTH CHANGES ---- */
+
+
+@media all and (max-width: 960px){
+    .slider p.text{    
+    font-size: 45px;
+   
+}
+}
+
+@media all and (max-width: 480px){
+	.logo span a img {
+		float: left;
+        width: 0.1%;
+        height: 100px;
+	}
+	
+	header nav ul {
+		float: right;
+		background: #6F5F5C;
+		width: 100%;
+		display: none;
+	}
+	header nav ul li {
+		float: none;
+		text-align: center;
+	}
+	header nav ul li a {
+		color: #fff;
+	}
+	.slider p.text {
+		font-size: 32px;
+	}
+	.content .box {
+		width: 50%;
+	}

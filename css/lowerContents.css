@@ -1,0 +1,112 @@
+.lowerMenu ul {
+    overflow: hidden;
+    text-align: center;
+    padding: 15px;
+    border-bottom: 2px solid black;
+    border-top: 3px solid black;
+}
+.lowerMenu ul li a{
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 20px;
+    color:#424242;
+    padding: 5px;
+    border: 2px solid #A4A4A4;
+    border-radius: 10px;
+}
+.lowerMenu ul li{
+    padding: 5px;
+    display: inline-block;
+}
+.lowerMenu ul li:hover{
+    background-color: #A4A4A4;
+    border-radius: 45px;
+    padding: 10px;
+    font-weight: 600;
+}
+
+
+/* --- Content --- */
+.container-lowerContent{
+    max-width: 800px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+.header-lowerContent h1{
+  display: block;
+  font-weight: 600;
+}
+
+.lowerContent-main p{
+    font-size: 18px;
+    font-weight: 200;
+    position: relative;
+}
+.lowerContent-main ul li{
+    list-style-type: disc;
+    font-size: 18px;
+    font-weight: 200;
+    position: relative;
+    padding: 5px;
+}
+.lowerContent-main img{
+   margin-top: 10px;
+    width: 100%;
+}
+
+.mapContainer{
+    max-width: 1500px;
+    margin: 0 auto;
+    overflow: hidden;
+    
+}
+#map{
+    width: 100%;
+    
+}
+#mainfood{
+    margin-left: 12px;
+}
+
+#adress{
+    font-size: 18px;
+    font-weight: 200;
+    padding: 10px 4px;
+}
+#strong{
+    font-weight: 600;
+    font-size: 19px;
+}
+#strongPadding{
+    font-weight: 600;
+    font-size: 20px;
+    padding: 2px;
+    text-align: center;
+}
+#text-img{
+    float: right; 
+    margin: 10px;
+    width: 50%;
+    height: 200px;
+}
+#vertical-img{
+    float:right;
+    margin: 10px;
+    width: 30%;
+    height: 300px;
+}
+#aboutUs{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 5px;
+    border: 1px solid #A4A4A4;
+}
+#aboutHeader{
+    margin-top: 35px;
+    font-size: 35px;
+    padding: 2px;
+    text-align: center;  
+}
+#aboutPage {
+    padding: 15px;
+}
