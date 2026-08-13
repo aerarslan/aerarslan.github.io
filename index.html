@@ -1,54 +1,925 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Presentation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            text-align: center;
-            padding: 20px;
-            margin: 0;
-        }
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-        h1 {
-            color: #800080; /* Purple color */
-            margin-bottom: 20px;
-        }
-        p {
-            font-size: 1.2em;
-            margin-bottom: 30px;
-        }
-        a {
-            display: inline-block;
-            text-decoration: none;
-            background-color: #800080; /* Purple button */
-            color: white;
-            padding: 10px 20px;
-            font-size: 1.2em;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        a:hover {
-            background-color: #5a005a; /* Darker purple on hover */
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tutorial: AI Assisted Research Workflow</title>
+<style>
+  :root{
+    --bg:#f7f8fb;
+    --panel:#ffffff;
+    --text:#1f2937;
+    --muted:#667085;
+    --line:#e5e7eb;
+    --accent:#3949ab;
+    --accent-soft:#eef0ff;
+    --code:#111827;
+  }
+
+  *{box-sizing:border-box}
+
+  html{scroll-behavior:smooth}
+
+  body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.5;
+  }
+
+  header{
+    background:var(--panel);
+    border-bottom:1px solid var(--line);
+  }
+
+  .header-inner{
+    max-width:1100px;
+    margin:0 auto;
+    padding:28px 24px 22px;
+  }
+
+  h1{
+    margin:0 0 8px;
+    font-size:30px;
+    line-height:1.2;
+  }
+
+  .subtitle{
+    margin:0;
+    color:var(--muted);
+    max-width:800px;
+  }
+
+  nav{
+    margin-top:20px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 18px;
+  }
+
+  nav a{
+    color:var(--accent);
+    text-decoration:none;
+    font-size:14px;
+  }
+
+  nav a:hover{text-decoration:underline}
+
+  main{
+    max-width:1100px;
+    margin:0 auto;
+    padding:28px 24px 56px;
+  }
+
+  section{
+    margin:0 0 34px;
+    scroll-margin-top:18px;
+  }
+
+  h2{
+    font-size:22px;
+    margin:0 0 8px;
+  }
+
+  h3{
+    font-size:16px;
+    margin:0 0 6px;
+  }
+
+  .section-note{
+    margin:0 0 16px;
+    color:var(--muted);
+  }
+
+  .workflow{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+    padding:16px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+  }
+
+  .workflow-step{
+    padding:7px 10px;
+    background:var(--accent-soft);
+    border-radius:7px;
+    font-size:14px;
+  }
+
+  .arrow{
+    color:#98a2b3;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+  }
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:15px 16px;
+  }
+
+  .signature{
+    display:block;
+    margin:7px 0 9px;
+    padding:7px 9px;
+    background:#f3f4f6;
+    border-radius:6px;
+    font-family:Consolas, "Courier New", monospace;
+    font-size:12.5px;
+    color:#263238;
+    overflow-wrap:anywhere;
+  }
+
+  .card p{
+    margin:6px 0;
+    font-size:14px;
+  }
+
+  .args{
+    color:var(--muted);
+    font-size:13px !important;
+  }
+
+  .note{
+    margin-top:12px;
+    padding:12px 14px;
+    border-left:3px solid var(--accent);
+    background:var(--panel);
+    border-top:1px solid var(--line);
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    border-radius:7px;
+    font-size:14px;
+  }
+
+  pre{
+    margin:12px 0 0;
+    background:var(--code);
+    color:#f3f4f6;
+    padding:14px 16px;
+    border-radius:8px;
+    overflow:auto;
+    font-size:12.5px;
+    line-height:1.5;
+  }
+
+  code{
+    font-family:Consolas, "Courier New", monospace;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--panel);
+    border:1px solid var(--line);
+  }
+
+  th,td{
+    padding:10px 11px;
+    border-bottom:1px solid var(--line);
+    text-align:left;
+    vertical-align:top;
+    font-size:13.5px;
+  }
+
+  th{
+    background:#f3f4f6;
+    font-size:12.5px;
+  }
+
+  tr:last-child td{border-bottom:none}
+
+  .small{
+    font-size:13px;
+    color:var(--muted);
+  }
+
+  footer{
+    margin-top:40px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+    color:var(--muted);
+    font-size:12px;
+  }
+
+  @media(max-width:760px){
+    .grid{grid-template-columns:1fr}
+    h1{font-size:26px}
+    main,.header-inner{padding-left:16px;padding-right:16px}
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>Thank you for participating in the event</h1>
-        <p>Click the button below to view the workshop presentation:</p>
-        <a href="https://helsinkifi-my.sharepoint.com/:p:/g/personal/erarslan_ad_helsinki_fi/ESHt1FuiR9BOglEZJwLazBsBV8U3OqvmFGA3At9DdRCKsQ?e=xn5Lk9" >View Presentation</a>
+
+<header>
+  <div class="header-inner">
+    <h1>Tutorial: AI Assisted Research Workflow</h1>
+    <p class="subtitle">Compact reference for the workflow and public functions used in the tutorial.</p>
+
+    <nav>
+      <a href="#workflow">Core workflow</a>
+      <a href="#settings">Settings</a>
+      <a href="#choices">Datasets and choices</a>
+      <a href="#main-functions">Main functions</a>
+      <a href="#plots">Plots</a>
+      <a href="#benchmark">Benchmarking</a>
+      <a href="#finish">Finalize and save</a>
+      <a href="#helpers">Optional tools</a>
+      <a href="#custom">Custom acquisition</a>
+      <a href="#properties">Properties</a>
+      <a href="#outputs">Saved outputs</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section id="workflow">
+  <h2>Core workflow</h2>
+  <p class="section-note">The main notebook keeps the closed-loop optimization process explicit.</p>
+
+  <div class="workflow">
+    <span class="workflow-step">Choose settings</span>
+    <span class="arrow">→</span>
+    <span class="workflow-step">Create initial observations</span>
+    <span class="arrow">→</span>
+    <span class="workflow-step">Fit GP</span>
+    <span class="arrow">→</span>
+    <span class="workflow-step">Suggest next input</span>
+    <span class="arrow">→</span>
+    <span class="workflow-step">Run experiment</span>
+    <span class="arrow">→</span>
+    <span class="workflow-step">Add observation</span>
+    <span class="arrow">→</span>
+    <span class="workflow-step">Record BO step</span>
+    <span class="arrow">→</span>
+    <span class="workflow-step">Refit GP</span>
+    <span class="arrow">→</span>
+    <span class="workflow-step">Continue or stop</span>
+  </div>
+
+  <div class="note">
+    During the optimization itself, decisions are made from the observed data and the GP model belief. Hidden ground truth is used only for benchmark evaluation.
+  </div>
+</section>
+
+<section id="settings">
+  <h2>Experiment settings</h2>
+  <p class="section-note">The run is configured with <code>ExperimentSettings(...)</code>, then created with <code>VL(...)</code>.</p>
+
+  <div class="card">
+    <h3>ExperimentSettings(...)</h3>
+    <span class="signature">ExperimentSettings(random_seed=..., strategy_label=..., dataset=..., number_of_initial_points=..., initial_design=..., surrogate_model=..., acquisition_function=...)</span>
+    <p>Defines the choices for one optimization run.</p>
+  </div>
+
+  <table style="margin-top:12px;">
+    <thead>
+      <tr><th>Argument</th><th>Meaning</th><th>Choices</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>random_seed</code></td>
+        <td>Seed used for the stochastic parts of the run, including the initial design and observation noise.</td>
+        <td>Integer</td>
+      </tr>
+      <tr>
+        <td><code>strategy_label</code></td>
+        <td>Optional label written to the experiment record and reports.</td>
+        <td>Text</td>
+      </tr>
+      <tr>
+        <td><code>dataset</code></td>
+        <td>Selects the virtual experiment and therefore its dimension, bounds, and hidden objective.</td>
+        <td><code>"2d_easy"</code>, <code>"2d_hard"</code>, <code>"5d"</code>, <code>"power_plant"</code></td>
+      </tr>
+      <tr>
+        <td><code>number_of_initial_points</code></td>
+        <td>Number of observations collected before fitting the first GP. Must be positive.</td>
+        <td>Positive integer</td>
+      </tr>
+      <tr>
+        <td><code>initial_design</code></td>
+        <td>Rule used to generate the initial input locations.</td>
+        <td><code>VL.initial.sobol()</code>, <code>VL.initial.latin_hypercube()</code>, <code>VL.initial.random()</code></td>
+      </tr>
+      <tr>
+        <td><code>surrogate_model</code></td>
+        <td>Surrogate-model choice used by <code>fit_surrogate_model()</code>.</td>
+        <td><code>VL.models.single_task_gp()</code></td>
+      </tr>
+      <tr>
+        <td><code>acquisition_function</code></td>
+        <td>Rule used by future calls to <code>suggest_next_point(model)</code>.</td>
+        <td><code>VL.acq.EI()</code>, <code>VL.acq.UCB(...)</code>, <code>VL.acq.PI()</code>, <code>VL.acq.Mean()</code>, <code>VL.acq.Std()</code>, or <code>VL.acq.Custom(...)</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <pre><code>EXPERIMENT_SETTINGS = ExperimentSettings(
+    random_seed=123,
+    dataset="2d_easy",
+    strategy_label="My BO run",
+    number_of_initial_points=2,
+    initial_design=VL.initial.random(),
+    surrogate_model=VL.models.single_task_gp(),
+    acquisition_function=VL.acq.EI(),
+)
+
+virtual_lab = VL(
+    experiment_settings=EXPERIMENT_SETTINGS,
+)
+
+virtual_lab.print_experiment_plan()</code></pre>
+
+  <div class="note">
+    To start a run with a custom acquisition function, pass the function to <code>VL.acq.Custom(...)</code> inside <code>ExperimentSettings</code>:
+  </div>
+
+  <pre><code>acquisition_function=VL.acq.Custom(
+    custom_acquisition_function,
+    label="my acquisition",
+)</code></pre>
+
+  <p class="small">
+    The first argument is the Python function that selects a candidate. <code>label</code> is optional and is used in tracking and reports. Constants specific to the custom rule are defined inside the custom function rather than passed through <code>VL.acq.Custom(...)</code>.
+  </p>
+
+  <div class="note">
+    Each call to <code>VL(...)</code> creates a new timestamped experiment folder inside <code>virtual_lab_runs/</code>. The file <code>global_observation_count.json</code> keeps a cumulative count of stored observations across runs.
+  </div>
+</section>
+
+<section id="choices">
+  <h2>Datasets and available choices</h2>
+
+  <table>
+    <thead>
+      <tr><th>Setting</th><th>Available choices</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Dataset</td><td><code>2d_easy</code>, <code>2d_hard</code>, <code>5d</code>, <code>power_plant</code></td></tr>
+      <tr><td>Initial design</td><td><code>VL.initial.random()</code>, <code>VL.initial.sobol()</code>, <code>VL.initial.latin_hypercube()</code></td></tr>
+      <tr><td>Surrogate model</td><td><code>VL.models.single_task_gp()</code></td></tr>
+      <tr><td>Acquisition</td><td><code>VL.acq.EI()</code>, <code>VL.acq.UCB(exploration_weight=...)</code>, <code>VL.acq.PI()</code>, <code>VL.acq.Mean()</code>, <code>VL.acq.Std()</code>, <code>VL.acq.Custom(function, label=...)</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="grid" style="margin-top:12px;">
+    <div class="card">
+      <h3><code>2d_easy</code></h3>
+      <p>A smooth two-dimensional synthetic optimization task. Model-belief plots are available.</p>
     </div>
+
+    <div class="card">
+      <h3><code>2d_hard</code></h3>
+      <p>A harder two-dimensional task with several broad competing high-value regions. Model-belief plots are available.</p>
+    </div>
+
+    <div class="card">
+      <h3><code>5d</code></h3>
+      <p>A five-dimensional smooth synthetic optimization task. The BO workflow is unchanged, but 2D model-belief plots are not available.</p>
+    </div>
+
+    <div class="card">
+      <h3><code>power_plant</code></h3>
+      <p>A four-input neural-network simulator for power-plant output. Its public bounds are in the original physical input units.</p>
+    </div>
+  </div>
+
+  <div class="note">
+    All four datasets use observation-noise standard deviation <code>0.03</code>. The GP uses a BoTorch <code>Normalize</code> input transform and <code>Standardize</code> outcome transform internally. This is why the power-plant bounds can remain in physical units rather than being exposed as values between 0 and 1.
+  </div>
+
+  <div class="grid" style="margin-top:12px;">
+    <div class="card">
+      <h3>EI</h3>
+      <span class="signature">VL.acq.EI()</span>
+      <p>Expected improvement. No arguments.</p>
+    </div>
+
+    <div class="card">
+      <h3>UCB</h3>
+      <span class="signature">VL.acq.UCB(exploration_weight=2.0)</span>
+      <p>Combines posterior mean and posterior uncertainty.</p>
+      <p class="args"><strong>exploration_weight</strong>: non-negative multiplier on posterior standard deviation. Default <code>2.0</code>. Larger values give uncertainty more influence.</p>
+    </div>
+
+    <div class="card">
+      <h3>PI</h3>
+      <span class="signature">VL.acq.PI()</span>
+      <p>Probability of improvement. No arguments.</p>
+    </div>
+
+    <div class="card">
+      <h3>Mean and Std</h3>
+      <span class="signature">VL.acq.Mean()</span>
+      <span class="signature">VL.acq.Std()</span>
+      <p><code>Mean()</code> focuses on exploitation. <code>Std()</code> focuses on uncertainty. Neither takes arguments.</p>
+    </div>
+
+    <div class="card">
+      <h3>Custom</h3>
+      <span class="signature">VL.acq.Custom(function, label="custom acquisition")</span>
+      <p>Wraps a Python candidate-selection function so it can be used as the active acquisition rule.</p>
+      <p class="args"><strong>function</strong>: required callable used to select the candidate · <strong>label</strong>: optional readable name stored in tracking and reports.</p>
+    </div>
+  </div>
+</section>
+
+<section id="main-functions">
+  <h2>Main functions used in the notebook</h2>
+  <p class="section-note">These are the main public calls used in the tutorial, in roughly the order they appear.</p>
+
+  <h3 style="margin-top:18px;">Create and inspect the run</h3>
+  <div class="grid">
+    <div class="card">
+      <h3>VL(...)</h3>
+      <span class="signature">virtual_lab = VL(experiment_settings=EXPERIMENT_SETTINGS)</span>
+      <p>Creates one virtual-lab run, initializes tracking, and creates its timestamped output folder. No observations are collected yet.</p>
+      <p class="args"><strong>experiment_settings</strong>: required <code>ExperimentSettings</code> object · <strong>lab_config</strong>: optional advanced configuration, normally left at its default.</p>
+    </div>
+
+    <div class="card">
+      <h3>print_experiment_plan()</h3>
+      <span class="signature">virtual_lab.print_experiment_plan()</span>
+      <p>Prints and records the selected dataset, initial design, surrogate model, acquisition rule, cost information, and output location.</p>
+      <p class="args">No arguments.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:18px;">Collect the initial observations</h3>
+  <div class="grid">
+    <div class="card">
+      <h3>run_initial_design()</h3>
+      <span class="signature">initial_design_points, initial_observed_y = virtual_lab.run_initial_design()</span>
+      <p>Generates the chosen initial design, evaluates it, stores the observations, and updates the observation counter and simulation cost.</p>
+      <p class="args">No arguments. Uses the choices already stored in <code>ExperimentSettings</code>.</p>
+    </div>
+
+    <div class="card">
+      <h3>print_initial_design(...)</h3>
+      <span class="signature">virtual_lab.print_initial_design(initial_design_points=initial_design_points, initial_observed_y=initial_observed_y)</span>
+      <p>Prints the initial points, observed responses, run observation count, and global observation count.</p>
+      <p class="args"><strong>initial_design_points</strong>: tensor returned by <code>run_initial_design()</code> · <strong>initial_observed_y</strong>: corresponding noisy responses.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:18px;">Fit and inspect the GP</h3>
+  <div class="grid">
+    <div class="card">
+      <h3>fit_surrogate_model(...)</h3>
+      <span class="signature">model = virtual_lab.fit_surrogate_model(record_fit=True)</span>
+      <p>Fits <code>SingleTaskGP</code> to all observations collected so far.</p>
+      <p class="args"><strong>record_fit</strong>: when <code>True</code>, this fit is added to the model-fit history and its diagnostics are recorded. Default <code>True</code>.</p>
+    </div>
+
+    <div class="card">
+      <h3>plot_model_belief(...)</h3>
+      <span class="signature">virtual_lab.plot_model_belief(model=model, show=True, save=False, save_path=None, filename=None)</span>
+      <p>For <code>2d_easy</code> and <code>2d_hard</code>, plots GP posterior mean and posterior standard deviation with the collected observations.</p>
+      <p class="args"><strong>model</strong>: fitted GP to plot; if omitted, a temporary unrecorded GP is fitted when observations exist · <strong>show</strong>: display figure · <strong>save</strong>: save figure · <strong>save_path</strong>: explicit path overriding the normal run folder · <strong>filename</strong>: custom filename when saving to the normal model-belief folder.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:18px;">Run one BO step</h3>
+  <div class="grid">
+    <div class="card">
+      <h3>suggest_next_point(model)</h3>
+      <span class="signature">candidate_x = virtual_lab.suggest_next_point(model)</span>
+      <p>Uses the current GP and active acquisition rule to propose the next experiment.</p>
+      <p class="args"><strong>model</strong>: current fitted <code>SingleTaskGP</code>. The acquisition rule comes from the current experiment settings.</p>
+    </div>
+
+    <div class="card">
+      <h3>simulate_responses(points)</h3>
+      <span class="signature">candidate_observed_y = virtual_lab.simulate_responses(candidate_x)</span>
+      <p>Runs the noisy virtual experiment and returns the observed response. It does not store the result or increase the stored observation count by itself.</p>
+      <p class="args"><strong>points</strong>: one or more input locations inside the current search-space bounds.</p>
+    </div>
+
+    <div class="card">
+      <h3>add_observations(...)</h3>
+      <span class="signature">virtual_lab.add_observations(candidate_x, candidate_observed_y, source=None)</span>
+      <p>Adds responses to the dataset. This is the storage step that increases the observation count and simulation cost.</p>
+      <p class="args"><strong>points</strong>: input locations · <strong>observed_values</strong>: exactly one observed response per input · <strong>source</strong>: optional tracking label; when omitted, the virtual lab creates one from the acquisition rule.</p>
+    </div>
+
+    <div class="card">
+      <h3>record_bo_step(...)</h3>
+      <span class="signature">virtual_lab.record_bo_step(candidate_x=candidate_x, candidate_observed_y=candidate_observed_y, bo_step_number=None)</span>
+      <p>Records the completed BO decision and the acquisition metadata associated with it.</p>
+      <p class="args"><strong>candidate_x</strong>: selected candidate · <strong>candidate_observed_y</strong>: its stored response · <strong>bo_step_number</strong>: optional explicit step number; normally leave <code>None</code> and let the virtual lab increment it.</p>
+    </div>
+
+    <div class="card">
+      <h3>print_bo_step_summary(...)</h3>
+      <span class="signature">virtual_lab.print_bo_step_summary(candidate_x=candidate_x, candidate_observed_y=candidate_observed_y)</span>
+      <p>Prints the latest candidate, observed response, best observed response so far, acquisition used, observation count, and simulation cost.</p>
+      <p class="args"><strong>candidate_x</strong>: candidate from the completed step · <strong>candidate_observed_y</strong>: its observed response.</p>
+    </div>
+  </div>
+</section>
+
+
+<section id="plots">
+  <h2>Plots and model history</h2>
+  <p class="section-note">The plotting functions serve different purposes. Model-belief and variance plots describe the fitted GP, while recommended utility and benchmark metrics use hidden ground truth for evaluation.</p>
+
+  <div class="grid">
+    <div class="card">
+      <h3>plot_model_belief(...)</h3>
+      <span class="signature">virtual_lab.plot_model_belief(model=model, show=False, save=True, save_path=None, filename=None)</span>
+      <p>Plots or saves the current 2D GP posterior mean and standard deviation with observed points.</p>
+      <p class="args"><strong>model</strong>: fitted GP; optional · <strong>show</strong>: display figure · <strong>save</strong>: save a PNG · <strong>save_path</strong>: explicit path · <strong>filename</strong>: custom filename in <code>model_belief_plots/</code>. Available only for <code>2d_easy</code> and <code>2d_hard</code>.</p>
+    </div>
+
+    <div class="card">
+      <h3>plot_average_variance_history(...)</h3>
+      <span class="signature">virtual_lab.plot_average_variance_history(show=True, save=False, save_path=None, filename=None)</span>
+      <p>Plots the average GP posterior variance over the fixed reference set after each recorded model fit.</p>
+      <p class="args"><strong>show</strong>: display figure · <strong>save</strong>: save figure · <strong>save_path</strong>: explicit path · <strong>filename</strong>: custom filename in the run's <code>plots/</code> folder. Works for all datasets.</p>
+    </div>
+
+    <div class="card">
+      <h3>plot_recommended_utility_history(...)</h3>
+      <span class="signature">virtual_lab.plot_recommended_utility_history(show=True, save=False, save_path=None, filename=None)</span>
+      <p>At each recorded fit, finds the reference point with the largest GP posterior mean and plots the hidden true utility at that recommended point.</p>
+      <p class="args"><strong>show</strong>: display figure · <strong>save</strong>: save figure · <strong>save_path</strong>: explicit path · <strong>filename</strong>: custom filename. Works for all datasets, but uses hidden ground truth.</p>
+    </div>
+
+    <div class="card">
+      <h3>make_model_belief_gif(...)</h3>
+      <span class="signature">virtual_lab.make_model_belief_gif(filename="model_belief_progression.gif", frame_duration_seconds=0.7)</span>
+      <p>Combines saved 2D model-belief frames into a GIF.</p>
+      <p class="args"><strong>filename</strong>: GIF filename in the experiment folder · <strong>frame_duration_seconds</strong>: positive time shown per frame. Requires saved model-belief PNG frames and a 2D dataset.</p>
+    </div>
+  </div>
+
+  <pre><code>virtual_lab.plot_recommended_utility_history(
+    show=True,
+    save=False,
+)
+
+virtual_lab.plot_average_variance_history(
+    show=True,
+    save=False,
+)
+
+if virtual_lab.supports_model_belief_plots:
+    virtual_lab.make_model_belief_gif(
+        frame_duration_seconds=1.0,
+    )</code></pre>
+</section>
+
+<section id="benchmark">
+  <h2>Benchmark metrics</h2>
+  <p class="section-note">These diagnostics are useful in the virtual lab because hidden ground truth is available.</p>
+
+  <div class="card">
+    <h3>plot_benchmark_metrics(...)</h3>
+    <span class="signature">virtual_lab.plot_benchmark_metrics(show=True, save=False, save_path=None, filename=None, log_scale=True)</span>
+    <p>Plots simple regret, inference regret, and function-learning RMSE against cumulative simulation cost.</p>
+    <p class="args"><strong>show</strong>: display figure · <strong>save</strong>: save figure · <strong>save_path</strong>: explicit output path · <strong>filename</strong>: custom filename in the run's <code>plots/</code> folder · <strong>log_scale</strong>: use a logarithmic y-axis when <code>True</code>.</p>
+  </div>
+
+  <table style="margin-top:12px;">
+    <thead>
+      <tr><th>Quantity</th><th>What it evaluates</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Simple regret</td><td>How good the best evaluated input is under the hidden true objective.</td></tr>
+      <tr><td>Inference regret</td><td>How good the GP's current posterior-mean recommendation is under the hidden true objective.</td></tr>
+      <tr><td>Function-learning RMSE</td><td>How accurately the GP posterior mean represents the hidden true function over the fixed reference set.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    These quantities are benchmark-only. In a real experiment, the hidden true function and true optimum are usually unavailable, so stopping decisions must rely on observed data, model belief, cost, time, and scientific judgment.
+  </div>
+
+  <div class="note">
+    In the tutorial workflow, the same current model is passed to <code>finalize_experiment(model=model)</code>. Therefore the last point in the recommended-utility history corresponds to the hidden true utility of that final model recommendation.
+  </div>
+</section>
+
+<section id="finish">
+  <h2>Finalize and save the experiment</h2>
+  <p class="section-note">After deciding to stop, record the final model recommendation and save the complete run.</p>
+
+  <div class="grid">
+    <div class="card">
+      <h3>finalize_experiment(...)</h3>
+      <span class="signature">final_model = virtual_lab.finalize_experiment(model=model)</span>
+      <p>Records the final model recommendation and benchmark summary, then returns the final GP.</p>
+      <p class="args"><strong>model</strong>: optional current GP. Pass it to reuse the model already fitted on the final dataset. If omitted, a new GP is fitted and recorded.</p>
+    </div>
+
+    <div class="card">
+      <h3>print_final_summary()</h3>
+      <span class="signature">virtual_lab.print_final_summary()</span>
+      <p>Prints final run counts, cumulative simulation cost, acquisition changes, and the experiment output folder.</p>
+      <p class="args">No arguments.</p>
+    </div>
+
+    <div class="card">
+      <h3>save_all_outputs(...)</h3>
+      <span class="signature">virtual_lab.save_all_outputs(final_model=final_model)</span>
+      <p>Saves the experiment metadata, tracking files, Markdown record, and available plots.</p>
+      <p class="args"><strong>final_model</strong>: optional final GP. Supplying it enables final benchmark outputs and the final 2D model-belief plot. Without it, currently available tracking, metadata, notebook, and history outputs are still saved.</p>
+    </div>
+  </div>
+
+  <pre><code>final_model = virtual_lab.finalize_experiment(
+    model=model,
+)
+
+virtual_lab.print_final_summary()
+
+virtual_lab.save_all_outputs(
+    final_model=final_model,
+)</code></pre>
+
+  <div class="note">
+    The final model recommendation is the fixed reference point with the highest posterior mean under the final GP. The generated record keeps the recommendation location and posterior mean separate from hidden benchmark values used to evaluate it.
+  </div>
+</section>
+
+<section id="helpers">
+  <h2>Optional helper tools</h2>
+  <p class="section-note">These functions and properties are not required by the main BO loop, but they are useful when extending the workflow.</p>
+
+  <div class="grid">
+    <div class="card">
+      <h3>suggest_alternative_points(...)</h3>
+      <span class="signature">suggestions_x = virtual_lab.suggest_alternative_points(model, number_of_points=5, minimum_normalized_distance=0.08)</span>
+      <p>Returns several strong, separated candidates from the active acquisition rule without running the simulator or changing the dataset.</p>
+      <p class="args"><strong>model</strong>: fitted GP · <strong>number_of_points</strong>: number of alternatives returned, default <code>5</code> · <strong>minimum_normalized_distance</strong>: minimum spacing between alternatives after normalizing the search space, default <code>0.08</code>. Larger values enforce more separation.</p>
+    </div>
+
+    <div class="card">
+      <h3>set_acquisition(...)</h3>
+      <span class="signature">virtual_lab.set_acquisition(VL.acq.UCB(exploration_weight=2.0))</span>
+      <p>Changes the acquisition rule used for future suggestions and records the change.</p>
+      <p class="args"><strong>acquisition_function</strong>: an acquisition choice such as <code>VL.acq.EI()</code>, <code>VL.acq.UCB(...)</code>, or <code>VL.acq.Custom(...)</code>. Changing the acquisition does not refit the GP. Already pending suggestions keep the rule that created them.</p>
+    </div>
+
+    <div class="card">
+      <h3>get_observed_dataset()</h3>
+      <span class="signature">observed_x, observed_y = virtual_lab.get_observed_dataset()</span>
+      <p>Returns all observed input locations and noisy responses currently stored in the run.</p>
+      <p class="args">No arguments. Useful for fitting another model or inspecting the complete collected dataset.</p>
+    </div>
+
+    <div class="card">
+      <h3>take_note(...)</h3>
+      <span class="signature">virtual_lab.take_note("My title", "My note", metrics=None)</span>
+      <p>Adds a manual note to the Markdown experiment record.</p>
+      <p class="args"><strong>title</strong>: required non-empty title · <strong>text</strong>: optional note text, default empty · <strong>metrics</strong>: optional mapping of structured values saved with the note.</p>
+    </div>
+
+    <div class="card">
+      <h3>print_experiment_report()</h3>
+      <span class="signature">virtual_lab.print_experiment_report()</span>
+      <p>Prints a compact report containing run history, final model recommendation, and benchmark information when available.</p>
+      <p class="args">No arguments.</p>
+    </div>
+
+    <div class="card">
+      <h3>save_notebook(...)</h3>
+      <span class="signature">virtual_lab.save_notebook(path=None)</span>
+      <p>Saves the current Markdown experiment record without running the full output-saving routine.</p>
+      <p class="args"><strong>path</strong>: optional explicit output path. When omitted, saves to the normal <code>virtual_lab_notebook.md</code> path for the run.</p>
+    </div>
+
+    <div class="card">
+      <h3>clear_model_belief_plots()</h3>
+      <span class="signature">removed_count = virtual_lab.clear_model_belief_plots()</span>
+      <p>Deletes saved 2D model-belief PNG frames from the run and returns how many were removed.</p>
+      <p class="args">No arguments.</p>
+    </div>
+
+    <div class="card">
+      <h3>ucb_exploration_weight()</h3>
+      <span class="signature">weight = virtual_lab.ucb_exploration_weight()</span>
+      <p>Returns the active UCB exploration weight. If the current acquisition does not store one, the method returns the default value <code>2.0</code>.</p>
+      <p class="args">No arguments.</p>
+    </div>
+  </div>
+</section>
+
+<section id="custom">
+  <h2>Custom acquisition function</h2>
+  <p class="section-note">A custom acquisition function receives a candidate pool and information from the current GP, then returns one selected point. The implementation of the rule is left open.</p>
+
+  <h3 style="margin-top:18px;">Use it in ExperimentSettings</h3>
+  <p>
+    <code>VL.acq.Custom(...)</code> takes the custom Python function as its first argument and an optional readable label. The resulting acquisition choice is passed directly to <code>ExperimentSettings</code>.
+  </p>
+
+  <pre><code>acquisition_function=VL.acq.Custom(
+    custom_acquisition_function,
+    label="my acquisition",
+)</code></pre>
+
+  <table style="margin-top:12px;">
+    <thead>
+      <tr><th><code>VL.acq.Custom(...)</code> argument</th><th>Meaning</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>function</code></td>
+        <td>Required callable containing the custom candidate-selection rule. For example, this can be the <code>custom_acquisition_function</code> template provided in the tutorial.</td>
+      </tr>
+      <tr>
+        <td><code>label</code></td>
+        <td>Optional readable name used in the experiment plan, BO-step tracking, acquisition-change history, and saved reports. Default: <code>"custom acquisition"</code>.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <code>VL.acq.Custom(...)</code> does not accept extra custom constants such as an exploration weight. Define constants needed by the rule inside the custom function itself.
+  </div>
+
+  <h3 style="margin-top:22px;">Arguments passed to the custom function</h3>
+  <p class="section-note">When a custom acquisition is active, the virtual lab calls the function with these keyword arguments.</p>
+
+  <table>
+    <thead>
+      <tr><th>Argument</th><th>Meaning</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>candidate_x</code></td>
+        <td>Candidate locations available for selection. Shape is approximately <code>(number_of_candidates, dimension)</code>.</td>
+      </tr>
+      <tr>
+        <td><code>model</code></td>
+        <td>Current fitted <code>SingleTaskGP</code>. This allows more advanced rules to query the model directly if needed.</td>
+      </tr>
+      <tr>
+        <td><code>posterior_mean</code></td>
+        <td>GP posterior mean evaluated at the supplied candidate locations.</td>
+      </tr>
+      <tr>
+        <td><code>posterior_standard_deviation</code></td>
+        <td>GP posterior standard deviation at the candidate locations.</td>
+      </tr>
+      <tr>
+        <td><code>best_observed_y</code></td>
+        <td>Best noisy response observed in the current dataset so far, provided as a Python float.</td>
+      </tr>
+      <tr>
+        <td><code>train_x</code></td>
+        <td>All observed input locations used to fit the current GP. Shape <code>(number_of_observations, dimension)</code>.</td>
+      </tr>
+      <tr>
+        <td><code>train_y</code></td>
+        <td>All noisy observed responses used to fit the current GP. Shape <code>(number_of_observations, 1)</code>.</td>
+      </tr>
+      <tr>
+        <td><code>bounds</code></td>
+        <td>Lower and upper search-space limits. Shape <code>(2, dimension)</code>. Power-plant bounds are in physical input units.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    The function should return one selected input with shape <code>(dimension,)</code> or <code>(1, dimension)</code>. In the normal tutorial workflow this should be a candidate selected from <code>candidate_x</code>. Hidden true objective values are not passed to the custom function.
+  </div>
+
+  <div class="note">
+    The callback does not receive <code>posterior_variance</code> as a separate public argument. If variance is needed, it can be obtained by squaring <code>posterior_standard_deviation</code>.
+  </div>
+
+  <h3 style="margin-top:22px;">Change the acquisition during an existing run</h3>
+  <p>
+    The acquisition rule can also be changed during an existing run with <code>set_acquisition(...)</code>. For example:
+  </p>
+
+  <pre><code>virtual_lab.set_acquisition(
+    VL.acq.EI()
+)</code></pre>
+
+  <p class="small">
+    This changes future acquisition suggestions but does not refit the GP. A candidate that was already suggested keeps the acquisition rule that originally selected it.
+  </p>
+</section>
+
+<section id="properties">
+  <h2>Useful properties</h2>
+  <p class="section-note">These are accessed without parentheses.</p>
+
+  <table>
+    <thead>
+      <tr><th>Property</th><th>Meaning</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>virtual_lab.bounds</code></td><td>Lower and upper search-space bounds.</td></tr>
+      <tr><td><code>virtual_lab.number_of_observations</code></td><td>Number of stored observations in this run.</td></tr>
+      <tr><td><code>virtual_lab.number_of_model_fits</code></td><td>Number of recorded surrogate-model fits.</td></tr>
+      <tr><td><code>virtual_lab.number_of_bo_steps</code></td><td>Number of completed BO steps.</td></tr>
+      <tr><td><code>virtual_lab.number_of_acquisition_changes</code></td><td>Number of acquisition-rule changes recorded.</td></tr>
+      <tr><td><code>virtual_lab.cumulative_simulation_cost</code></td><td>Total simulation cost accumulated in the run.</td></tr>
+      <tr><td><code>virtual_lab.supports_model_belief_plots</code></td><td><code>True</code> for the two 2D datasets and <code>False</code> for the higher-dimensional datasets.</td></tr>
+      <tr><td><code>virtual_lab.notes</code></td><td>Tuple of notes recorded in the experiment record.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="outputs">
+  <h2>Saved outputs</h2>
+  <p class="section-note">Each run has its own timestamped folder under <code>virtual_lab_runs/</code>.</p>
+
+  <pre><code>virtual_lab_runs/
+    global_observation_count.json
+
+    exp_YYYY_MM_DD_HH_MM/
+        virtual_lab_notebook.md
+        model_belief_progression.gif        # if make_model_belief_gif() was called
+
+        csv/
+            observations.csv
+            model_fits.csv
+            bo_steps.csv
+            acquisition_changes.csv         # only if the acquisition changed
+
+        json/
+            experiment_metadata.json
+            tracking.json
+
+        plots/
+            average_posterior_variance_vs_observations.png
+            recommended_utility_history.png
+            benchmark_metrics_vs_simulation_cost.png
+            final_model_belief.png          # 2D datasets only
+
+        model_belief_plots/
+            model_belief_fit_...png         # if frames were saved</code></pre>
+
+  <div class="note">
+    <code>save_all_outputs(final_model=final_model)</code> automatically saves the average-variance and recommended-utility history plots when model fits exist. Supplying <code>final_model</code> also saves the benchmark plot and, for a 2D run, the final GP-belief plot.
+  </div>
+
+  <div class="note">
+    The generated <code>virtual_lab_notebook.md</code> contains the run notes, current status, acquisition changes, BO-step history, surrogate-model fit history, and observed dataset. The fit-history table includes average posterior variance and recommended true utility.
+  </div>
+
+  <div class="note">
+    Plotting, GP fitting, and benchmark calculations do not increase the global observation count. Initial-design observations and observations stored with <code>add_observations(...)</code> do.
+  </div>
+</section>
+
+<section>
+  <h2>Useful distinctions</h2>
+
+  <table>
+    <thead>
+      <tr><th>Comparison</th><th>Difference</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>simulate_responses(...)</code> vs. <code>add_observations(...)</code></td>
+        <td>The first returns a noisy response without storing it. The second stores the response and increases the observation count and simulation cost.</td>
+      </tr>
+      <tr>
+        <td>Best observed response vs. final model recommendation</td>
+        <td>The best observed response is the largest noisy measurement seen so far. The final recommendation is the reference point where the final GP posterior mean is largest.</td>
+      </tr>
+      <tr>
+        <td><code>plot_average_variance_history()</code> vs. <code>plot_recommended_utility_history()</code></td>
+        <td>Average variance summarizes GP uncertainty. Recommended utility evaluates each GP recommendation using hidden ground truth.</td>
+      </tr>
+      <tr>
+        <td><code>plot_model_belief(...)</code> vs. <code>plot_benchmark_metrics(...)</code></td>
+        <td>Model belief visualizes the GP and is only available for 2D datasets. Benchmark metrics use hidden ground truth and work for every dataset.</td>
+      </tr>
+      <tr>
+        <td><code>fit_surrogate_model()</code> vs. <code>finalize_experiment(model=model)</code></td>
+        <td>The first fits and records a GP state. The second reuses the supplied final GP and records the final recommendation and benchmark summary.</td>
+      </tr>
+      <tr>
+        <td><code>VL.acq.Mean()</code> vs. <code>VL.acq.Std()</code></td>
+        <td>Mean is exploitation-oriented. Std is uncertainty-oriented.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  Tutorial: AI Assisted Research Workflow
+</footer>
+
+</main>
 </body>
 </html>
