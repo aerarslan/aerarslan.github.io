@@ -2,924 +2,267 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tutorial: AI Assisted Research Workflow</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#153a38">
+<meta name="description" content="Explore related Forrester, Branin and Hartmann6 functions. Adjust parameter spread and compare responses using RMSE.">
+<title>Response Similarity Lab</title>
 <style>
-  :root{
-    --bg:#f7f8fb;
-    --panel:#ffffff;
-    --text:#1f2937;
-    --muted:#667085;
-    --line:#e5e7eb;
-    --accent:#3949ab;
-    --accent-soft:#eef0ff;
-    --code:#111827;
-  }
-
-  *{box-sizing:border-box}
-
-  html{scroll-behavior:smooth}
-
-  body{
-    margin:0;
-    font-family:Arial, Helvetica, sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    line-height:1.5;
-  }
-
-  header{
-    background:var(--panel);
-    border-bottom:1px solid var(--line);
-  }
-
-  .header-inner{
-    max-width:1100px;
-    margin:0 auto;
-    padding:28px 24px 22px;
-  }
-
-  h1{
-    margin:0 0 8px;
-    font-size:30px;
-    line-height:1.2;
-  }
-
-  .subtitle{
-    margin:0;
-    color:var(--muted);
-    max-width:800px;
-  }
-
-  nav{
-    margin-top:20px;
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px 18px;
-  }
-
-  nav a{
-    color:var(--accent);
-    text-decoration:none;
-    font-size:14px;
-  }
-
-  nav a:hover{text-decoration:underline}
-
-  main{
-    max-width:1100px;
-    margin:0 auto;
-    padding:28px 24px 56px;
-  }
-
-  section{
-    margin:0 0 34px;
-    scroll-margin-top:18px;
-  }
-
-  h2{
-    font-size:22px;
-    margin:0 0 8px;
-  }
-
-  h3{
-    font-size:16px;
-    margin:0 0 6px;
-  }
-
-  .section-note{
-    margin:0 0 16px;
-    color:var(--muted);
-  }
-
-  .workflow{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    align-items:center;
-    padding:16px;
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:10px;
-  }
-
-  .workflow-step{
-    padding:7px 10px;
-    background:var(--accent-soft);
-    border-radius:7px;
-    font-size:14px;
-  }
-
-  .arrow{
-    color:#98a2b3;
-  }
-
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:12px;
-  }
-
-  .card{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:10px;
-    padding:15px 16px;
-  }
-
-  .signature{
-    display:block;
-    margin:7px 0 9px;
-    padding:7px 9px;
-    background:#f3f4f6;
-    border-radius:6px;
-    font-family:Consolas, "Courier New", monospace;
-    font-size:12.5px;
-    color:#263238;
-    overflow-wrap:anywhere;
-  }
-
-  .card p{
-    margin:6px 0;
-    font-size:14px;
-  }
-
-  .args{
-    color:var(--muted);
-    font-size:13px !important;
-  }
-
-  .note{
-    margin-top:12px;
-    padding:12px 14px;
-    border-left:3px solid var(--accent);
-    background:var(--panel);
-    border-top:1px solid var(--line);
-    border-right:1px solid var(--line);
-    border-bottom:1px solid var(--line);
-    border-radius:7px;
-    font-size:14px;
-  }
-
-  pre{
-    margin:12px 0 0;
-    background:var(--code);
-    color:#f3f4f6;
-    padding:14px 16px;
-    border-radius:8px;
-    overflow:auto;
-    font-size:12.5px;
-    line-height:1.5;
-  }
-
-  code{
-    font-family:Consolas, "Courier New", monospace;
-  }
-
-  table{
-    width:100%;
-    border-collapse:collapse;
-    background:var(--panel);
-    border:1px solid var(--line);
-  }
-
-  th,td{
-    padding:10px 11px;
-    border-bottom:1px solid var(--line);
-    text-align:left;
-    vertical-align:top;
-    font-size:13.5px;
-  }
-
-  th{
-    background:#f3f4f6;
-    font-size:12.5px;
-  }
-
-  tr:last-child td{border-bottom:none}
-
-  .small{
-    font-size:13px;
-    color:var(--muted);
-  }
-
-  footer{
-    margin-top:40px;
-    padding-top:18px;
-    border-top:1px solid var(--line);
-    color:var(--muted);
-    font-size:12px;
-  }
-
-  @media(max-width:760px){
-    .grid{grid-template-columns:1fr}
-    h1{font-size:26px}
-    main,.header-inner{padding-left:16px;padding-right:16px}
-  }
+:root{--ink:#203532;--muted:#647571;--line:#dce3df;--paper:#f5f6f2;--white:#fff;--green:#176b57;--mint:#e7f2eb;--amber:#a86926;--radius:16px;--shadow:0 3px 14px #183e3205}
+[hidden]{display:none!important}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.5 Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select{font:inherit}button,a,input,select{touch-action:manipulation}button{cursor:pointer}button:disabled{cursor:default;opacity:.55}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #9bba5c;outline-offset:3px}button,a{transition:background .15s,border-color .15s}a{color:var(--green)}h1,h2,h3,p{margin:0}h1{font-size:clamp(25px,2.4vw,35px);font-weight:650;letter-spacing:-1px;line-height:1.2}h2{font-size:17px;font-weight:650;letter-spacing:-.3px}h3{font-size:14px;font-weight:650}small{font-size:12px}.muted{color:var(--muted)}.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-variant-numeric:tabular-nums}.eyebrow{text-transform:uppercase;font-size:10px;font-weight:700;letter-spacing:1.5px}.topbar{min-height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 32px}.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink)}.mark{width:38px;height:38px;background:var(--ink);border-radius:11px;display:grid;place-items:center}.brand-name{font-size:16px;font-weight:680;letter-spacing:-.4px}.brand-sub{font-size:11px;color:var(--muted)}.header-actions{display:flex;align-items:center;gap:9px}.pill{font-size:11px;border:1px solid var(--line);border-radius:30px;padding:5px 10px;color:var(--muted);white-space:nowrap}.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#52a471;margin-right:5px}.btn{border:1px solid var(--line);border-radius:9px;padding:8px 12px;background:white;color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;font-size:12px;font-weight:600;white-space:nowrap}.btn:hover{background:#f0f4ef;border-color:#b2c5ba}.btn.primary{background:var(--green);color:#fff;border-color:var(--green)}.btn.primary:hover{background:#115343}.btn svg{width:15px;height:15px}.workspace{display:grid;grid-template-columns:274px minmax(0,1fr);max-width:1640px;margin:0 auto;gap:28px;padding:28px 32px 40px}.sidebar{align-self:start;position:sticky;top:20px}.controls{background:white;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:21px}.control-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:21px}.reset{border:0;background:none;color:var(--muted);font-size:11px;padding:3px}.reset:hover{color:var(--green)}.field{margin-bottom:22px}.field:last-child{margin-bottom:0}.field label,.label{display:block;font-size:12px;font-weight:650;margin-bottom:7px}.field small{display:block;color:var(--muted);font-size:11px;line-height:1.45;margin-top:7px}.seed-row{display:flex;gap:7px}input[type=number],select{min-width:0;width:100%;border:1px solid #ced9d2;border-radius:8px;background:#fbfcf9;padding:9px 10px;color:var(--ink)}.seed-row button{width:37px;flex-shrink:0;padding:8px}.control-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}.control-cols .field{margin-bottom:20px}.rule{height:1px;background:var(--line);margin:2px 0 21px}.range-head{display:flex;align-items:center;justify-content:space-between;gap:5px}.range-head output{background:var(--mint);border-radius:5px;padding:2px 7px;color:#235b49;font-size:12px;font-variant-numeric:tabular-nums}.range-head label{margin:0}input[type=range]{width:100%;margin:14px 0 0;accent-color:var(--green);height:18px;cursor:pointer}.range-ends{display:flex;justify-content:space-between;font-size:10px;color:#7f8e84;margin-top:2px}.info-note{margin:16px 4px 0;font-size:12px;line-height:1.6;color:var(--muted)}.info-note strong{color:var(--ink);font-weight:600}.math-note{margin-top:13px;padding:13px 14px;border-radius:10px;background:#eaf0e8;border:1px solid #dce7d7;font-size:12px;line-height:1.6}.math-note .formula{font-family:Georgia,serif;font-style:italic;font-size:16px;color:#284436;margin:4px 0}.content{min-width:0}.intro{display:flex;justify-content:space-between;gap:20px;align-items:start;margin:1px 0 23px}.intro p{color:var(--muted);margin-top:9px;max-width:700px;font-size:13px}.intro .eyebrow{color:#718477;margin-bottom:9px}.family-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px}.family-tab{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;background:transparent;padding:10px 16px;color:var(--muted);font-size:13px;font-weight:600}.family-tab span{border:1px solid #dae2dc;background:#fff;padding:1px 5px;border-radius:4px;font-size:10px;font-weight:500}.family-tab.active{background:var(--ink);border-color:var(--ink);color:#fff}.family-tab.active span{background:#ffffff12;color:#dae8df;border-color:#6a8276}.family-tab:hover:not(.active){background:white}.stat-row{display:grid;grid-template-columns:1fr 1.3fr 1fr;border:1px solid var(--line);border-radius:12px;background:#fff;margin-bottom:20px;overflow:hidden}.stat{padding:13px 18px;min-width:0}.stat+.stat{border-left:1px solid var(--line)}.stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:600}.stat-value{margin-top:5px;font-size:17px;font-weight:650;letter-spacing:-.3px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}.stat-value small{font-size:11px;font-weight:400;color:var(--muted);letter-spacing:0}.panel{border:1px solid var(--line);border-radius:var(--radius);background:white;box-shadow:var(--shadow);padding:20px;min-width:0}.panel-head{display:flex;align-items:start;justify-content:space-between;gap:14px;margin-bottom:14px}.panel-head p{font-size:11px;color:var(--muted);margin-top:4px}.panel-head .btn{padding:5px 8px;font-size:11px}.chart-area{position:relative}.chart-canvas{display:block;width:100%;height:320px}.legend{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 3px}.legend-chip{display:inline-flex;gap:7px;align-items:center;border:1px solid #e0e7e1;border-radius:20px;padding:5px 10px;background:white;font-size:11px;color:var(--ink)}.legend-chip .swatch{width:14px;height:3px;border-radius:2px;background:var(--series)}.legend-chip.off{opacity:.4;text-decoration:line-through}.legend-chip.target{border-style:dashed}.legend-hint{font-size:10px;color:var(--muted);margin-top:7px}.figure-note{font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6}.plot-panel{margin-bottom:20px}.surface-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.surface-card{border:1px solid #e5e9e4;border-radius:10px;padding:10px 8px 4px;background:#fcfdfa}.surface-card.target-card{border-color:#455e52;border-style:dashed;background:#fff}.surface-head{display:flex;align-items:center;gap:6px;padding:0 5px;font-size:12px;font-weight:650}.surface-head .mini{margin-left:auto;font-size:9px;font-weight:400;color:var(--muted)}.surface-canvas{display:block;width:100%;height:206px}.surface-dot{width:8px;height:8px;background:var(--series);border-radius:50%;flex-shrink:0}.scale-row{display:flex;align-items:center;gap:10px;font-size:10px;color:var(--muted);justify-content:center;margin-top:16px}.scale-gradient{height:7px;border-radius:8px;max-width:270px;flex:1;background:linear-gradient(90deg,#17384f,#286b83,#429b88,#a9c56f,#f7dc7c)}.scale-label{font-size:10px;text-align:center;color:var(--muted);margin-top:4px}.view-select{padding:6px 8px;font-size:11px;width:auto;max-width:165px}.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:0}.bar-canvas,.matrix-canvas{width:100%;height:310px;display:block}.hartmann-note{display:flex;align-items:center;gap:18px;background:#ebf1ed;border:1px solid #d5e2d8;border-radius:12px;padding:17px 20px;margin-bottom:20px}.hartmann-note svg{width:45px;height:45px;color:#5c806a;flex-shrink:0}.hartmann-note p{font-size:12px;color:var(--muted);margin-top:3px}.hartmann-note strong{font-size:13px;font-weight:600}.tooltip{display:none;position:absolute;z-index:5;pointer-events:none;background:#203532f5;color:#fff;border-radius:8px;padding:10px 12px;font-size:11px;box-shadow:0 5px 16px #142f3020;min-width:105px}.tooltip .tip-line{display:flex;align-items:center;gap:8px;justify-content:space-between;line-height:1.7}.tooltip .tip-head{font-size:10px;color:#b9cbbb;margin-bottom:5px}.below{margin-top:20px}.details-panel{border:1px solid var(--line);border-radius:12px;background:#fff}.details-panel summary{list-style:none;cursor:pointer;padding:15px 18px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:600}.details-panel summary::-webkit-details-marker{display:none}.details-panel summary:after{content:'+';font-size:20px;font-weight:400;color:var(--muted)}.details-panel[open] summary:after{content:'−'}.details-body{padding:0 20px 20px;color:var(--muted);font-size:12px}.details-body p{margin-bottom:10px}.method-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.math-display{background:#f6f8f3;border:1px solid #e4e9e0;border-radius:8px;padding:12px 13px;margin:10px 0;font:15px/1.8 Georgia,serif;color:#334c3c;overflow-x:auto}.param-wrap{overflow:auto;max-height:290px;margin-top:12px}.params{width:100%;border-collapse:collapse;font-size:11px;font-variant-numeric:tabular-nums;text-align:right}.params th,.params td{padding:7px 10px;border-bottom:1px solid #e8ece5;white-space:nowrap}.params th{color:var(--ink);font-weight:600}.params th:first-child,.params td:first-child{text-align:left}.method-label{font-weight:600;color:var(--ink);margin-top:5px}.bottom-line{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:10px;color:#7a8880;margin:17px 1px}.status{display:flex;align-items:center;gap:6px}.status:before{content:'';width:5px;height:5px;border-radius:50%;background:#739969}.error{background:#fef2ed;border:1px solid #e8c5b6;color:#96381b;padding:10px;border-radius:8px;margin-bottom:15px}.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:9px;font-size:12px;z-index:10;box-shadow:0 6px 20px #0002}.export-menu{display:flex;gap:8px}.card-count{color:var(--muted);font-size:11px}.comparison-badge{font-size:10px;display:inline-block;background:var(--mint);border-radius:4px;padding:2px 6px;color:#286344;margin-left:4px}
+@media(min-width:1450px){.chart-canvas{height:370px}.surface-canvas{height:240px}}
+@media(max-width:1050px){.workspace{grid-template-columns:230px minmax(0,1fr);gap:18px;padding:24px}.controls{padding:17px}.chart-grid{grid-template-columns:1fr}.surface-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.intro{display:block}.stat{padding:12px}.topbar{padding:14px 24px}.pill{display:none}}
+@media(max-width:720px){.workspace{display:flex;flex-direction:column;padding:20px 16px;gap:22px}.sidebar{position:static}.controls{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}.control-head{grid-column:1/-1;margin-bottom:14px}.control-cols{grid-column:2;grid-row:2}.controls>.field{margin-bottom:14px}.controls .rule{display:none}.controls .samples-field{grid-column:1/-1;margin-bottom:0}.controls>.field small{font-size:10px}.info-note{font-size:11px;margin-top:10px}.math-note{display:none}.topbar{padding:12px 16px;gap:8px}.brand-name{font-size:14px}.brand-sub{font-size:10px}.mark{width:32px;height:32px}.header-actions .html-download{display:none}.header-actions .btn{padding:7px 9px}.intro{margin-bottom:18px}h1{font-size:27px}.family-tabs{gap:5px}.family-tab{padding:8px 10px;gap:6px;font-size:11px}.stat-row{grid-template-columns:1fr 1.3fr}.stat:last-child{display:none}.stat-value{font-size:16px}.panel{padding:14px}.chart-canvas{height:310px}.bar-canvas,.matrix-canvas{height:300px}.surface-canvas{height:180px}.surface-grid{gap:8px}.panel-head{gap:8px}.method-grid{grid-template-columns:1fr;gap:12px}.bottom-line{align-items:start;line-height:1.7}.surface-head .mini{font-size:8px}.surface-card{padding:9px 4px 3px}.view-select{max-width:126px;font-size:10px}.panel-head h2{font-size:15px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media print{.sidebar,.topbar,.family-tabs,.export-menu,.details-panel{display:none}.workspace{display:block;padding:0}.panel{break-inside:avoid}.content{width:100%}body{background:white}}
 </style>
 </head>
 <body>
-
-<header>
-  <div class="header-inner">
-    <h1>Tutorial: AI Assisted Research Workflow</h1>
-    <p class="subtitle">Compact reference for the workflow and public functions used in the tutorial.</p>
-
-    <nav>
-      <a href="#workflow">Core workflow</a>
-      <a href="#settings">Settings</a>
-      <a href="#choices">Datasets and choices</a>
-      <a href="#main-functions">Main functions</a>
-      <a href="#plots">Plots</a>
-      <a href="#benchmark">Benchmarking</a>
-      <a href="#finish">Finalize and save</a>
-      <a href="#helpers">Optional tools</a>
-      <a href="#custom">Custom acquisition</a>
-      <a href="#properties">Properties</a>
-      <a href="#outputs">Saved outputs</a>
-    </nav>
-  </div>
+<header class="topbar">
+ <a class="brand" href="#" aria-label="Response Similarity Lab home"><span class="mark"><svg width="26" height="24" viewBox="0 0 26 24" fill="none" aria-hidden="true"><path d="M2 18C7 18 5 5 12 6S17 20 24 4" stroke="#bcd2a3" stroke-width="2"/><path d="M2 14C7 14 8 2 13 8S20 18 24 10" stroke="white" stroke-width="1.5"/></svg></span><span><span class="brand-name">Response Similarity Lab</span><span class="brand-sub" style="display:block">Related functions. Shared settings. Measured differences.</span></span></a>
+ <div class="header-actions"><span class="pill"><span class="dot"></span>Interactive research demo</span><button class="btn html-download" id="downloadHtml" type="button">Download HTML</button><button class="btn" id="exportBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M5 16v5h14v-5"/></svg>Save figure</button></div>
 </header>
-
-<main>
-
-<section id="workflow">
-  <h2>Core workflow</h2>
-  <p class="section-note">The main notebook keeps the closed-loop optimization process explicit.</p>
-
-  <div class="workflow">
-    <span class="workflow-step">Choose settings</span>
-    <span class="arrow">→</span>
-    <span class="workflow-step">Create initial observations</span>
-    <span class="arrow">→</span>
-    <span class="workflow-step">Fit GP</span>
-    <span class="arrow">→</span>
-    <span class="workflow-step">Suggest next input</span>
-    <span class="arrow">→</span>
-    <span class="workflow-step">Run experiment</span>
-    <span class="arrow">→</span>
-    <span class="workflow-step">Add observation</span>
-    <span class="arrow">→</span>
-    <span class="workflow-step">Record BO step</span>
-    <span class="arrow">→</span>
-    <span class="workflow-step">Refit GP</span>
-    <span class="arrow">→</span>
-    <span class="workflow-step">Continue or stop</span>
-  </div>
-
-  <div class="note">
-    During the optimization itself, decisions are made from the observed data and the GP model belief. Hidden ground truth is used only for benchmark evaluation.
-  </div>
-</section>
-
-<section id="settings">
-  <h2>Experiment settings</h2>
-  <p class="section-note">The run is configured with <code>ExperimentSettings(...)</code>, then created with <code>VL(...)</code>.</p>
-
-  <div class="card">
-    <h3>ExperimentSettings(...)</h3>
-    <span class="signature">ExperimentSettings(random_seed=..., strategy_label=..., dataset=..., number_of_initial_points=..., initial_design=..., surrogate_model=..., acquisition_function=...)</span>
-    <p>Defines the choices for one optimization run.</p>
-  </div>
-
-  <table style="margin-top:12px;">
-    <thead>
-      <tr><th>Argument</th><th>Meaning</th><th>Choices</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><code>random_seed</code></td>
-        <td>Seed used for the stochastic parts of the run, including the initial design and observation noise.</td>
-        <td>Integer</td>
-      </tr>
-      <tr>
-        <td><code>strategy_label</code></td>
-        <td>Optional label written to the experiment record and reports.</td>
-        <td>Text</td>
-      </tr>
-      <tr>
-        <td><code>dataset</code></td>
-        <td>Selects the virtual experiment and therefore its dimension, bounds, and hidden objective.</td>
-        <td><code>"2d_easy"</code>, <code>"2d_hard"</code>, <code>"5d"</code>, <code>"power_plant"</code></td>
-      </tr>
-      <tr>
-        <td><code>number_of_initial_points</code></td>
-        <td>Number of observations collected before fitting the first GP. Must be positive.</td>
-        <td>Positive integer</td>
-      </tr>
-      <tr>
-        <td><code>initial_design</code></td>
-        <td>Rule used to generate the initial input locations.</td>
-        <td><code>VL.initial.sobol()</code>, <code>VL.initial.latin_hypercube()</code>, <code>VL.initial.random()</code></td>
-      </tr>
-      <tr>
-        <td><code>surrogate_model</code></td>
-        <td>Surrogate-model choice used by <code>fit_surrogate_model()</code>.</td>
-        <td><code>VL.models.single_task_gp()</code></td>
-      </tr>
-      <tr>
-        <td><code>acquisition_function</code></td>
-        <td>Rule used by future calls to <code>suggest_next_point(model)</code>.</td>
-        <td><code>VL.acq.EI()</code>, <code>VL.acq.UCB(...)</code>, <code>VL.acq.PI()</code>, <code>VL.acq.Mean()</code>, <code>VL.acq.Std()</code>, or <code>VL.acq.Custom(...)</code></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <pre><code>EXPERIMENT_SETTINGS = ExperimentSettings(
-    random_seed=123,
-    dataset="2d_easy",
-    strategy_label="My BO run",
-    number_of_initial_points=2,
-    initial_design=VL.initial.random(),
-    surrogate_model=VL.models.single_task_gp(),
-    acquisition_function=VL.acq.EI(),
-)
-
-virtual_lab = VL(
-    experiment_settings=EXPERIMENT_SETTINGS,
-)
-
-virtual_lab.print_experiment_plan()</code></pre>
-
-  <div class="note">
-    To start a run with a custom acquisition function, pass the function to <code>VL.acq.Custom(...)</code> inside <code>ExperimentSettings</code>:
-  </div>
-
-  <pre><code>acquisition_function=VL.acq.Custom(
-    custom_acquisition_function,
-    label="my acquisition",
-)</code></pre>
-
-  <p class="small">
-    The first argument is the Python function that selects a candidate. <code>label</code> is optional and is used in tracking and reports. Constants specific to the custom rule are defined inside the custom function rather than passed through <code>VL.acq.Custom(...)</code>.
-  </p>
-
-  <div class="note">
-    Each call to <code>VL(...)</code> creates a new timestamped experiment folder inside <code>virtual_lab_runs/</code>. The file <code>global_observation_count.json</code> keeps a cumulative count of stored observations across runs.
-  </div>
-</section>
-
-<section id="choices">
-  <h2>Datasets and available choices</h2>
-
-  <table>
-    <thead>
-      <tr><th>Setting</th><th>Available choices</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>Dataset</td><td><code>2d_easy</code>, <code>2d_hard</code>, <code>5d</code>, <code>power_plant</code></td></tr>
-      <tr><td>Initial design</td><td><code>VL.initial.random()</code>, <code>VL.initial.sobol()</code>, <code>VL.initial.latin_hypercube()</code></td></tr>
-      <tr><td>Surrogate model</td><td><code>VL.models.single_task_gp()</code></td></tr>
-      <tr><td>Acquisition</td><td><code>VL.acq.EI()</code>, <code>VL.acq.UCB(exploration_weight=...)</code>, <code>VL.acq.PI()</code>, <code>VL.acq.Mean()</code>, <code>VL.acq.Std()</code>, <code>VL.acq.Custom(function, label=...)</code></td></tr>
-    </tbody>
-  </table>
-
-  <div class="grid" style="margin-top:12px;">
-    <div class="card">
-      <h3><code>2d_easy</code></h3>
-      <p>A smooth two-dimensional synthetic optimization task. Model-belief plots are available.</p>
-    </div>
-
-    <div class="card">
-      <h3><code>2d_hard</code></h3>
-      <p>A harder two-dimensional task with several broad competing high-value regions. Model-belief plots are available.</p>
-    </div>
-
-    <div class="card">
-      <h3><code>5d</code></h3>
-      <p>A five-dimensional smooth synthetic optimization task. The BO workflow is unchanged, but 2D model-belief plots are not available.</p>
-    </div>
-
-    <div class="card">
-      <h3><code>power_plant</code></h3>
-      <p>A four-input neural-network simulator for power-plant output. Its public bounds are in the original physical input units.</p>
-    </div>
-  </div>
-
-  <div class="note">
-    All four datasets use observation-noise standard deviation <code>0.03</code>. The GP uses a BoTorch <code>Normalize</code> input transform and <code>Standardize</code> outcome transform internally. This is why the power-plant bounds can remain in physical units rather than being exposed as values between 0 and 1.
-  </div>
-
-  <div class="grid" style="margin-top:12px;">
-    <div class="card">
-      <h3>EI</h3>
-      <span class="signature">VL.acq.EI()</span>
-      <p>Expected improvement. No arguments.</p>
-    </div>
-
-    <div class="card">
-      <h3>UCB</h3>
-      <span class="signature">VL.acq.UCB(exploration_weight=2.0)</span>
-      <p>Combines posterior mean and posterior uncertainty.</p>
-      <p class="args"><strong>exploration_weight</strong>: non-negative multiplier on posterior standard deviation. Default <code>2.0</code>. Larger values give uncertainty more influence.</p>
-    </div>
-
-    <div class="card">
-      <h3>PI</h3>
-      <span class="signature">VL.acq.PI()</span>
-      <p>Probability of improvement. No arguments.</p>
-    </div>
-
-    <div class="card">
-      <h3>Mean and Std</h3>
-      <span class="signature">VL.acq.Mean()</span>
-      <span class="signature">VL.acq.Std()</span>
-      <p><code>Mean()</code> focuses on exploitation. <code>Std()</code> focuses on uncertainty. Neither takes arguments.</p>
-    </div>
-
-    <div class="card">
-      <h3>Custom</h3>
-      <span class="signature">VL.acq.Custom(function, label="custom acquisition")</span>
-      <p>Wraps a Python candidate-selection function so it can be used as the active acquisition rule.</p>
-      <p class="args"><strong>function</strong>: required callable used to select the candidate · <strong>label</strong>: optional readable name stored in tracking and reports.</p>
-    </div>
-  </div>
-</section>
-
-<section id="main-functions">
-  <h2>Main functions used in the notebook</h2>
-  <p class="section-note">These are the main public calls used in the tutorial, in roughly the order they appear.</p>
-
-  <h3 style="margin-top:18px;">Create and inspect the run</h3>
-  <div class="grid">
-    <div class="card">
-      <h3>VL(...)</h3>
-      <span class="signature">virtual_lab = VL(experiment_settings=EXPERIMENT_SETTINGS)</span>
-      <p>Creates one virtual-lab run, initializes tracking, and creates its timestamped output folder. No observations are collected yet.</p>
-      <p class="args"><strong>experiment_settings</strong>: required <code>ExperimentSettings</code> object · <strong>lab_config</strong>: optional advanced configuration, normally left at its default.</p>
-    </div>
-
-    <div class="card">
-      <h3>print_experiment_plan()</h3>
-      <span class="signature">virtual_lab.print_experiment_plan()</span>
-      <p>Prints and records the selected dataset, initial design, surrogate model, acquisition rule, cost information, and output location.</p>
-      <p class="args">No arguments.</p>
-    </div>
-  </div>
-
-  <h3 style="margin-top:18px;">Collect the initial observations</h3>
-  <div class="grid">
-    <div class="card">
-      <h3>run_initial_design()</h3>
-      <span class="signature">initial_design_points, initial_observed_y = virtual_lab.run_initial_design()</span>
-      <p>Generates the chosen initial design, evaluates it, stores the observations, and updates the observation counter and simulation cost.</p>
-      <p class="args">No arguments. Uses the choices already stored in <code>ExperimentSettings</code>.</p>
-    </div>
-
-    <div class="card">
-      <h3>print_initial_design(...)</h3>
-      <span class="signature">virtual_lab.print_initial_design(initial_design_points=initial_design_points, initial_observed_y=initial_observed_y)</span>
-      <p>Prints the initial points, observed responses, run observation count, and global observation count.</p>
-      <p class="args"><strong>initial_design_points</strong>: tensor returned by <code>run_initial_design()</code> · <strong>initial_observed_y</strong>: corresponding noisy responses.</p>
-    </div>
-  </div>
-
-  <h3 style="margin-top:18px;">Fit and inspect the GP</h3>
-  <div class="grid">
-    <div class="card">
-      <h3>fit_surrogate_model(...)</h3>
-      <span class="signature">model = virtual_lab.fit_surrogate_model(record_fit=True)</span>
-      <p>Fits <code>SingleTaskGP</code> to all observations collected so far.</p>
-      <p class="args"><strong>record_fit</strong>: when <code>True</code>, this fit is added to the model-fit history and its diagnostics are recorded. Default <code>True</code>.</p>
-    </div>
-
-    <div class="card">
-      <h3>plot_model_belief(...)</h3>
-      <span class="signature">virtual_lab.plot_model_belief(model=model, show=True, save=False, save_path=None, filename=None)</span>
-      <p>For <code>2d_easy</code> and <code>2d_hard</code>, plots GP posterior mean and posterior standard deviation with the collected observations.</p>
-      <p class="args"><strong>model</strong>: fitted GP to plot; if omitted, a temporary unrecorded GP is fitted when observations exist · <strong>show</strong>: display figure · <strong>save</strong>: save figure · <strong>save_path</strong>: explicit path overriding the normal run folder · <strong>filename</strong>: custom filename when saving to the normal model-belief folder.</p>
-    </div>
-  </div>
-
-  <h3 style="margin-top:18px;">Run one BO step</h3>
-  <div class="grid">
-    <div class="card">
-      <h3>suggest_next_point(model)</h3>
-      <span class="signature">candidate_x = virtual_lab.suggest_next_point(model)</span>
-      <p>Uses the current GP and active acquisition rule to propose the next experiment.</p>
-      <p class="args"><strong>model</strong>: current fitted <code>SingleTaskGP</code>. The acquisition rule comes from the current experiment settings.</p>
-    </div>
-
-    <div class="card">
-      <h3>simulate_responses(points)</h3>
-      <span class="signature">candidate_observed_y = virtual_lab.simulate_responses(candidate_x)</span>
-      <p>Runs the noisy virtual experiment and returns the observed response. It does not store the result or increase the stored observation count by itself.</p>
-      <p class="args"><strong>points</strong>: one or more input locations inside the current search-space bounds.</p>
-    </div>
-
-    <div class="card">
-      <h3>add_observations(...)</h3>
-      <span class="signature">virtual_lab.add_observations(candidate_x, candidate_observed_y, source=None)</span>
-      <p>Adds responses to the dataset. This is the storage step that increases the observation count and simulation cost.</p>
-      <p class="args"><strong>points</strong>: input locations · <strong>observed_values</strong>: exactly one observed response per input · <strong>source</strong>: optional tracking label; when omitted, the virtual lab creates one from the acquisition rule.</p>
-    </div>
-
-    <div class="card">
-      <h3>record_bo_step(...)</h3>
-      <span class="signature">virtual_lab.record_bo_step(candidate_x=candidate_x, candidate_observed_y=candidate_observed_y, bo_step_number=None)</span>
-      <p>Records the completed BO decision and the acquisition metadata associated with it.</p>
-      <p class="args"><strong>candidate_x</strong>: selected candidate · <strong>candidate_observed_y</strong>: its stored response · <strong>bo_step_number</strong>: optional explicit step number; normally leave <code>None</code> and let the virtual lab increment it.</p>
-    </div>
-
-    <div class="card">
-      <h3>print_bo_step_summary(...)</h3>
-      <span class="signature">virtual_lab.print_bo_step_summary(candidate_x=candidate_x, candidate_observed_y=candidate_observed_y)</span>
-      <p>Prints the latest candidate, observed response, best observed response so far, acquisition used, observation count, and simulation cost.</p>
-      <p class="args"><strong>candidate_x</strong>: candidate from the completed step · <strong>candidate_observed_y</strong>: its observed response.</p>
-    </div>
-  </div>
-</section>
-
-
-<section id="plots">
-  <h2>Plots and model history</h2>
-  <p class="section-note">The plotting functions serve different purposes. Model-belief and variance plots describe the fitted GP, while recommended utility and benchmark metrics use hidden ground truth for evaluation.</p>
-
-  <div class="grid">
-    <div class="card">
-      <h3>plot_model_belief(...)</h3>
-      <span class="signature">virtual_lab.plot_model_belief(model=model, show=False, save=True, save_path=None, filename=None)</span>
-      <p>Plots or saves the current 2D GP posterior mean and standard deviation with observed points.</p>
-      <p class="args"><strong>model</strong>: fitted GP; optional · <strong>show</strong>: display figure · <strong>save</strong>: save a PNG · <strong>save_path</strong>: explicit path · <strong>filename</strong>: custom filename in <code>model_belief_plots/</code>. Available only for <code>2d_easy</code> and <code>2d_hard</code>.</p>
-    </div>
-
-    <div class="card">
-      <h3>plot_average_variance_history(...)</h3>
-      <span class="signature">virtual_lab.plot_average_variance_history(show=True, save=False, save_path=None, filename=None)</span>
-      <p>Plots the average GP posterior variance over the fixed reference set after each recorded model fit.</p>
-      <p class="args"><strong>show</strong>: display figure · <strong>save</strong>: save figure · <strong>save_path</strong>: explicit path · <strong>filename</strong>: custom filename in the run's <code>plots/</code> folder. Works for all datasets.</p>
-    </div>
-
-    <div class="card">
-      <h3>plot_recommended_utility_history(...)</h3>
-      <span class="signature">virtual_lab.plot_recommended_utility_history(show=True, save=False, save_path=None, filename=None)</span>
-      <p>At each recorded fit, finds the reference point with the largest GP posterior mean and plots the hidden true utility at that recommended point.</p>
-      <p class="args"><strong>show</strong>: display figure · <strong>save</strong>: save figure · <strong>save_path</strong>: explicit path · <strong>filename</strong>: custom filename. Works for all datasets, but uses hidden ground truth.</p>
-    </div>
-
-    <div class="card">
-      <h3>make_model_belief_gif(...)</h3>
-      <span class="signature">virtual_lab.make_model_belief_gif(filename="model_belief_progression.gif", frame_duration_seconds=0.7)</span>
-      <p>Combines saved 2D model-belief frames into a GIF.</p>
-      <p class="args"><strong>filename</strong>: GIF filename in the experiment folder · <strong>frame_duration_seconds</strong>: positive time shown per frame. Requires saved model-belief PNG frames and a 2D dataset.</p>
-    </div>
-  </div>
-
-  <pre><code>virtual_lab.plot_recommended_utility_history(
-    show=True,
-    save=False,
-)
-
-virtual_lab.plot_average_variance_history(
-    show=True,
-    save=False,
-)
-
-if virtual_lab.supports_model_belief_plots:
-    virtual_lab.make_model_belief_gif(
-        frame_duration_seconds=1.0,
-    )</code></pre>
-</section>
-
-<section id="benchmark">
-  <h2>Benchmark metrics</h2>
-  <p class="section-note">These diagnostics are useful in the virtual lab because hidden ground truth is available.</p>
-
-  <div class="card">
-    <h3>plot_benchmark_metrics(...)</h3>
-    <span class="signature">virtual_lab.plot_benchmark_metrics(show=True, save=False, save_path=None, filename=None, log_scale=True)</span>
-    <p>Plots simple regret, inference regret, and function-learning RMSE against cumulative simulation cost.</p>
-    <p class="args"><strong>show</strong>: display figure · <strong>save</strong>: save figure · <strong>save_path</strong>: explicit output path · <strong>filename</strong>: custom filename in the run's <code>plots/</code> folder · <strong>log_scale</strong>: use a logarithmic y-axis when <code>True</code>.</p>
-  </div>
-
-  <table style="margin-top:12px;">
-    <thead>
-      <tr><th>Quantity</th><th>What it evaluates</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>Simple regret</td><td>How good the best evaluated input is under the hidden true objective.</td></tr>
-      <tr><td>Inference regret</td><td>How good the GP's current posterior-mean recommendation is under the hidden true objective.</td></tr>
-      <tr><td>Function-learning RMSE</td><td>How accurately the GP posterior mean represents the hidden true function over the fixed reference set.</td></tr>
-    </tbody>
-  </table>
-
-  <div class="note">
-    These quantities are benchmark-only. In a real experiment, the hidden true function and true optimum are usually unavailable, so stopping decisions must rely on observed data, model belief, cost, time, and scientific judgment.
-  </div>
-
-  <div class="note">
-    In the tutorial workflow, the same current model is passed to <code>finalize_experiment(model=model)</code>. Therefore the last point in the recommended-utility history corresponds to the hidden true utility of that final model recommendation.
-  </div>
-</section>
-
-<section id="finish">
-  <h2>Finalize and save the experiment</h2>
-  <p class="section-note">After deciding to stop, record the final model recommendation and save the complete run.</p>
-
-  <div class="grid">
-    <div class="card">
-      <h3>finalize_experiment(...)</h3>
-      <span class="signature">final_model = virtual_lab.finalize_experiment(model=model)</span>
-      <p>Records the final model recommendation and benchmark summary, then returns the final GP.</p>
-      <p class="args"><strong>model</strong>: optional current GP. Pass it to reuse the model already fitted on the final dataset. If omitted, a new GP is fitted and recorded.</p>
-    </div>
-
-    <div class="card">
-      <h3>print_final_summary()</h3>
-      <span class="signature">virtual_lab.print_final_summary()</span>
-      <p>Prints final run counts, cumulative simulation cost, acquisition changes, and the experiment output folder.</p>
-      <p class="args">No arguments.</p>
-    </div>
-
-    <div class="card">
-      <h3>save_all_outputs(...)</h3>
-      <span class="signature">virtual_lab.save_all_outputs(final_model=final_model)</span>
-      <p>Saves the experiment metadata, tracking files, Markdown record, and available plots.</p>
-      <p class="args"><strong>final_model</strong>: optional final GP. Supplying it enables final benchmark outputs and the final 2D model-belief plot. Without it, currently available tracking, metadata, notebook, and history outputs are still saved.</p>
-    </div>
-  </div>
-
-  <pre><code>final_model = virtual_lab.finalize_experiment(
-    model=model,
-)
-
-virtual_lab.print_final_summary()
-
-virtual_lab.save_all_outputs(
-    final_model=final_model,
-)</code></pre>
-
-  <div class="note">
-    The final model recommendation is the fixed reference point with the highest posterior mean under the final GP. The generated record keeps the recommendation location and posterior mean separate from hidden benchmark values used to evaluate it.
-  </div>
-</section>
-
-<section id="helpers">
-  <h2>Optional helper tools</h2>
-  <p class="section-note">These functions and properties are not required by the main BO loop, but they are useful when extending the workflow.</p>
-
-  <div class="grid">
-    <div class="card">
-      <h3>suggest_alternative_points(...)</h3>
-      <span class="signature">suggestions_x = virtual_lab.suggest_alternative_points(model, number_of_points=5, minimum_normalized_distance=0.08)</span>
-      <p>Returns several strong, separated candidates from the active acquisition rule without running the simulator or changing the dataset.</p>
-      <p class="args"><strong>model</strong>: fitted GP · <strong>number_of_points</strong>: number of alternatives returned, default <code>5</code> · <strong>minimum_normalized_distance</strong>: minimum spacing between alternatives after normalizing the search space, default <code>0.08</code>. Larger values enforce more separation.</p>
-    </div>
-
-    <div class="card">
-      <h3>set_acquisition(...)</h3>
-      <span class="signature">virtual_lab.set_acquisition(VL.acq.UCB(exploration_weight=2.0))</span>
-      <p>Changes the acquisition rule used for future suggestions and records the change.</p>
-      <p class="args"><strong>acquisition_function</strong>: an acquisition choice such as <code>VL.acq.EI()</code>, <code>VL.acq.UCB(...)</code>, or <code>VL.acq.Custom(...)</code>. Changing the acquisition does not refit the GP. Already pending suggestions keep the rule that created them.</p>
-    </div>
-
-    <div class="card">
-      <h3>get_observed_dataset()</h3>
-      <span class="signature">observed_x, observed_y = virtual_lab.get_observed_dataset()</span>
-      <p>Returns all observed input locations and noisy responses currently stored in the run.</p>
-      <p class="args">No arguments. Useful for fitting another model or inspecting the complete collected dataset.</p>
-    </div>
-
-    <div class="card">
-      <h3>take_note(...)</h3>
-      <span class="signature">virtual_lab.take_note("My title", "My note", metrics=None)</span>
-      <p>Adds a manual note to the Markdown experiment record.</p>
-      <p class="args"><strong>title</strong>: required non-empty title · <strong>text</strong>: optional note text, default empty · <strong>metrics</strong>: optional mapping of structured values saved with the note.</p>
-    </div>
-
-    <div class="card">
-      <h3>print_experiment_report()</h3>
-      <span class="signature">virtual_lab.print_experiment_report()</span>
-      <p>Prints a compact report containing run history, final model recommendation, and benchmark information when available.</p>
-      <p class="args">No arguments.</p>
-    </div>
-
-    <div class="card">
-      <h3>save_notebook(...)</h3>
-      <span class="signature">virtual_lab.save_notebook(path=None)</span>
-      <p>Saves the current Markdown experiment record without running the full output-saving routine.</p>
-      <p class="args"><strong>path</strong>: optional explicit output path. When omitted, saves to the normal <code>virtual_lab_notebook.md</code> path for the run.</p>
-    </div>
-
-    <div class="card">
-      <h3>clear_model_belief_plots()</h3>
-      <span class="signature">removed_count = virtual_lab.clear_model_belief_plots()</span>
-      <p>Deletes saved 2D model-belief PNG frames from the run and returns how many were removed.</p>
-      <p class="args">No arguments.</p>
-    </div>
-
-    <div class="card">
-      <h3>ucb_exploration_weight()</h3>
-      <span class="signature">weight = virtual_lab.ucb_exploration_weight()</span>
-      <p>Returns the active UCB exploration weight. If the current acquisition does not store one, the method returns the default value <code>2.0</code>.</p>
-      <p class="args">No arguments.</p>
-    </div>
-  </div>
-</section>
-
-<section id="custom">
-  <h2>Custom acquisition function</h2>
-  <p class="section-note">A custom acquisition function receives a candidate pool and information from the current GP, then returns one selected point. The implementation of the rule is left open.</p>
-
-  <h3 style="margin-top:18px;">Use it in ExperimentSettings</h3>
-  <p>
-    <code>VL.acq.Custom(...)</code> takes the custom Python function as its first argument and an optional readable label. The resulting acquisition choice is passed directly to <code>ExperimentSettings</code>.
-  </p>
-
-  <pre><code>acquisition_function=VL.acq.Custom(
-    custom_acquisition_function,
-    label="my acquisition",
-)</code></pre>
-
-  <table style="margin-top:12px;">
-    <thead>
-      <tr><th><code>VL.acq.Custom(...)</code> argument</th><th>Meaning</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><code>function</code></td>
-        <td>Required callable containing the custom candidate-selection rule. For example, this can be the <code>custom_acquisition_function</code> template provided in the tutorial.</td>
-      </tr>
-      <tr>
-        <td><code>label</code></td>
-        <td>Optional readable name used in the experiment plan, BO-step tracking, acquisition-change history, and saved reports. Default: <code>"custom acquisition"</code>.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="note">
-    <code>VL.acq.Custom(...)</code> does not accept extra custom constants such as an exploration weight. Define constants needed by the rule inside the custom function itself.
-  </div>
-
-  <h3 style="margin-top:22px;">Arguments passed to the custom function</h3>
-  <p class="section-note">When a custom acquisition is active, the virtual lab calls the function with these keyword arguments.</p>
-
-  <table>
-    <thead>
-      <tr><th>Argument</th><th>Meaning</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><code>candidate_x</code></td>
-        <td>Candidate locations available for selection. Shape is approximately <code>(number_of_candidates, dimension)</code>.</td>
-      </tr>
-      <tr>
-        <td><code>model</code></td>
-        <td>Current fitted <code>SingleTaskGP</code>. This allows more advanced rules to query the model directly if needed.</td>
-      </tr>
-      <tr>
-        <td><code>posterior_mean</code></td>
-        <td>GP posterior mean evaluated at the supplied candidate locations.</td>
-      </tr>
-      <tr>
-        <td><code>posterior_standard_deviation</code></td>
-        <td>GP posterior standard deviation at the candidate locations.</td>
-      </tr>
-      <tr>
-        <td><code>best_observed_y</code></td>
-        <td>Best noisy response observed in the current dataset so far, provided as a Python float.</td>
-      </tr>
-      <tr>
-        <td><code>train_x</code></td>
-        <td>All observed input locations used to fit the current GP. Shape <code>(number_of_observations, dimension)</code>.</td>
-      </tr>
-      <tr>
-        <td><code>train_y</code></td>
-        <td>All noisy observed responses used to fit the current GP. Shape <code>(number_of_observations, 1)</code>.</td>
-      </tr>
-      <tr>
-        <td><code>bounds</code></td>
-        <td>Lower and upper search-space limits. Shape <code>(2, dimension)</code>. Power-plant bounds are in physical input units.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="note">
-    The function should return one selected input with shape <code>(dimension,)</code> or <code>(1, dimension)</code>. In the normal tutorial workflow this should be a candidate selected from <code>candidate_x</code>. Hidden true objective values are not passed to the custom function.
-  </div>
-
-  <div class="note">
-    The callback does not receive <code>posterior_variance</code> as a separate public argument. If variance is needed, it can be obtained by squaring <code>posterior_standard_deviation</code>.
-  </div>
-
-  <h3 style="margin-top:22px;">Change the acquisition during an existing run</h3>
-  <p>
-    The acquisition rule can also be changed during an existing run with <code>set_acquisition(...)</code>. For example:
-  </p>
-
-  <pre><code>virtual_lab.set_acquisition(
-    VL.acq.EI()
-)</code></pre>
-
-  <p class="small">
-    This changes future acquisition suggestions but does not refit the GP. A candidate that was already suggested keeps the acquisition rule that originally selected it.
-  </p>
-</section>
-
-<section id="properties">
-  <h2>Useful properties</h2>
-  <p class="section-note">These are accessed without parentheses.</p>
-
-  <table>
-    <thead>
-      <tr><th>Property</th><th>Meaning</th></tr>
-    </thead>
-    <tbody>
-      <tr><td><code>virtual_lab.bounds</code></td><td>Lower and upper search-space bounds.</td></tr>
-      <tr><td><code>virtual_lab.number_of_observations</code></td><td>Number of stored observations in this run.</td></tr>
-      <tr><td><code>virtual_lab.number_of_model_fits</code></td><td>Number of recorded surrogate-model fits.</td></tr>
-      <tr><td><code>virtual_lab.number_of_bo_steps</code></td><td>Number of completed BO steps.</td></tr>
-      <tr><td><code>virtual_lab.number_of_acquisition_changes</code></td><td>Number of acquisition-rule changes recorded.</td></tr>
-      <tr><td><code>virtual_lab.cumulative_simulation_cost</code></td><td>Total simulation cost accumulated in the run.</td></tr>
-      <tr><td><code>virtual_lab.supports_model_belief_plots</code></td><td><code>True</code> for the two 2D datasets and <code>False</code> for the higher-dimensional datasets.</td></tr>
-      <tr><td><code>virtual_lab.notes</code></td><td>Tuple of notes recorded in the experiment record.</td></tr>
-    </tbody>
-  </table>
-</section>
-
-<section id="outputs">
-  <h2>Saved outputs</h2>
-  <p class="section-note">Each run has its own timestamped folder under <code>virtual_lab_runs/</code>.</p>
-
-  <pre><code>virtual_lab_runs/
-    global_observation_count.json
-
-    exp_YYYY_MM_DD_HH_MM/
-        virtual_lab_notebook.md
-        model_belief_progression.gif        # if make_model_belief_gif() was called
-
-        csv/
-            observations.csv
-            model_fits.csv
-            bo_steps.csv
-            acquisition_changes.csv         # only if the acquisition changed
-
-        json/
-            experiment_metadata.json
-            tracking.json
-
-        plots/
-            average_posterior_variance_vs_observations.png
-            recommended_utility_history.png
-            benchmark_metrics_vs_simulation_cost.png
-            final_model_belief.png          # 2D datasets only
-
-        model_belief_plots/
-            model_belief_fit_...png         # if frames were saved</code></pre>
-
-  <div class="note">
-    <code>save_all_outputs(final_model=final_model)</code> automatically saves the average-variance and recommended-utility history plots when model fits exist. Supplying <code>final_model</code> also saves the benchmark plot and, for a 2D run, the final GP-belief plot.
-  </div>
-
-  <div class="note">
-    The generated <code>virtual_lab_notebook.md</code> contains the run notes, current status, acquisition changes, BO-step history, surrogate-model fit history, and observed dataset. The fit-history table includes average posterior variance and recommended true utility.
-  </div>
-
-  <div class="note">
-    Plotting, GP fitting, and benchmark calculations do not increase the global observation count. Initial-design observations and observations stored with <code>add_observations(...)</code> do.
-  </div>
-</section>
-
-<section>
-  <h2>Useful distinctions</h2>
-
-  <table>
-    <thead>
-      <tr><th>Comparison</th><th>Difference</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><code>simulate_responses(...)</code> vs. <code>add_observations(...)</code></td>
-        <td>The first returns a noisy response without storing it. The second stores the response and increases the observation count and simulation cost.</td>
-      </tr>
-      <tr>
-        <td>Best observed response vs. final model recommendation</td>
-        <td>The best observed response is the largest noisy measurement seen so far. The final recommendation is the reference point where the final GP posterior mean is largest.</td>
-      </tr>
-      <tr>
-        <td><code>plot_average_variance_history()</code> vs. <code>plot_recommended_utility_history()</code></td>
-        <td>Average variance summarizes GP uncertainty. Recommended utility evaluates each GP recommendation using hidden ground truth.</td>
-      </tr>
-      <tr>
-        <td><code>plot_model_belief(...)</code> vs. <code>plot_benchmark_metrics(...)</code></td>
-        <td>Model belief visualizes the GP and is only available for 2D datasets. Benchmark metrics use hidden ground truth and work for every dataset.</td>
-      </tr>
-      <tr>
-        <td><code>fit_surrogate_model()</code> vs. <code>finalize_experiment(model=model)</code></td>
-        <td>The first fits and records a GP state. The second reuses the supplied final GP and records the final recommendation and benchmark summary.</td>
-      </tr>
-      <tr>
-        <td><code>VL.acq.Mean()</code> vs. <code>VL.acq.Std()</code></td>
-        <td>Mean is exploitation-oriented. Std is uncertainty-oriented.</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
-
-<footer>
-  Tutorial: AI Assisted Research Workflow
-</footer>
-
+<div class="workspace">
+<aside class="sidebar" aria-label="Generation controls">
+ <div class="controls">
+  <div class="control-head"><h2>Build a family</h2><button type="button" class="reset" id="reset">Reset</button></div>
+  <div class="field"><label for="seed">Random seed</label><div class="seed-row"><input id="seed" type="number" min="0" max="4294967295" step="1" value="123" inputmode="numeric"><button type="button" class="btn" id="newSeed" title="Use the next seed" aria-label="Generate a family with the next seed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-2l2 3M4 16l2 3a7 7 0 0 0 12-2"/></svg></button></div><small>Same seed, same random directions.</small></div>
+  <div class="control-cols"><div class="field"><label for="count">Old functions</label><select id="count"><option>2</option><option>3</option><option>4</option><option selected>5</option><option>6</option><option>7</option><option>8</option></select></div><div class="field"><label for="source">Source of g</label><select id="source" aria-label="Historical function used to generate g"></select></div></div>
+  <div class="rule"></div>
+  <div class="field"><div class="range-head"><label for="oldSpread">Historical spread <span class="muted">ρ</span></label><output id="oldValue" for="oldSpread">1.00</output></div><input id="oldSpread" type="range" min="0" max="1" step=".01" value="1"><div class="range-ends"><span>Same base</span><span>Full ranges</span></div><small>How widely the old function parameters vary.</small></div>
+  <div class="field"><div class="range-head"><label for="gSpread">New-batch spread <span class="muted">s</span></label><output id="gValue" for="gSpread">0.20</output></div><input id="gSpread" type="range" min="0" max="1" step=".01" value=".2"><div class="range-ends"><span>Same as source</span><span>Full ranges</span></div><small>Move g away from its source in one fixed parameter direction.</small></div>
+  <div class="field samples-field" id="resolutionField"><label for="resolution">Comparison resolution</label><select id="resolution"></select><small id="resolutionHelp">All functions are compared at the same locations.</small></div>
+ </div>
+ <p class="info-note"><strong>Lower RMSE means closer responses.</strong> Spread controls the parameters; it is not a percentage of similarity.</p>
+ <div class="math-note"><span class="eyebrow">How g is made</span><div class="formula">θ<sub>g</sub> = θ<sub>source</sub> + s (θ<sub>anchor</sub> − θ<sub>source</sub>)</div><span>At s = 0, g and its source coincide. The functions stay smooth.</span></div>
+</aside>
+<main class="content">
+ <div class="intro"><div><div class="eyebrow">Explore the ground truths</div><h1>How close is the new response?</h1><p>Generate related historical functions, create a new batch <i>g</i>, and compare their responses across the same domain.</p></div></div>
+ <nav class="family-tabs" aria-label="Benchmark function"><button class="family-tab active" data-family="forrester" aria-pressed="true">Forrester <span>1D</span></button><button class="family-tab" data-family="branin" aria-pressed="false">Branin <span>2D</span></button><button class="family-tab" data-family="hartmann" aria-pressed="false">Hartmann <span>6D</span></button></nav>
+ <div class="error" id="error" role="alert" hidden></div>
+ <div class="stat-row" aria-live="polite" aria-atomic="true"><div class="stat"><div class="stat-label">Generated from</div><div class="stat-value" id="parentStat">f₁ <small>historical source</small></div></div><div class="stat"><div class="stat-label">Closest to g</div><div class="stat-value" id="closestStat"></div></div><div class="stat"><div class="stat-label">Shared locations</div><div class="stat-value" id="pointsStat"></div></div></div>
+ <section class="panel plot-panel" id="functionPanel" aria-labelledby="plotTitle">
+  <div class="panel-head"><div><h2 id="plotTitle">The response family</h2><p id="plotSubtitle">Five historical curves and one new batch.</p></div><select class="view-select" id="surfaceMode" aria-label="Branin surface visualization" hidden><option value="response">Response surfaces</option><option value="difference">Difference from g</option></select><span class="card-count" id="curveCount">1 input · 6 functions</span></div>
+  <div class="chart-area" id="lineArea"><canvas id="lineCanvas" class="chart-canvas" role="img" aria-label="Overlaid historical and new target function curves"></canvas><div class="tooltip" id="lineTooltip"></div></div>
+  <div class="legend" id="legend"></div><p class="legend-hint" id="legendHint">Click a label to show or hide a curve. Hover to inspect a setting.</p>
+  <div class="surface-grid" id="surfaces" hidden></div><div id="surfaceScale" hidden><div class="scale-row"><span class="mono" id="scaleMin"></span><span class="scale-gradient" id="gradient"></span><span class="mono" id="scaleMax"></span></div><p class="scale-label" id="scaleLabel">One color scale for every surface</p></div>
+  <p class="figure-note" id="functionNote"></p>
+ </section>
+ <div class="hartmann-note" id="hartmannNote" hidden><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="m24 3 19 11v21L24 46 5 35V14L24 3Zm0 0v21m19-10L24 24 5 14m19 10v22M5 35l19-11 19 11"/><path d="m15 9 19 11v21M34 9 15 20v21" opacity=".4"/></svg><div><strong>Six inputs, one common comparison domain.</strong><p>Distances use the full [0, 1]⁶ domain. The original narrow coefficient ranges can produce very similar responses even at full spread.</p></div></div>
+ <div class="chart-grid">
+  <section class="panel" aria-labelledby="distanceTitle"><div class="panel-head"><div><h2 id="distanceTitle">Distance to the new batch</h2><p>RMSE of each historical function against g</p></div><span class="pill">Lower is closer</span></div><div class="chart-area"><canvas id="barCanvas" class="bar-canvas" role="img" aria-label="Historical function RMSE to target g"></canvas><div class="tooltip" id="barTooltip"></div></div><p class="figure-note" id="rankNote"></p></section>
+  <section class="panel" aria-labelledby="matrixTitle"><div class="panel-head"><div><h2 id="matrixTitle">Every pair, compared</h2><p>Same RMSE criterion for all function pairs</p></div></div><div class="chart-area"><canvas id="matrixCanvas" class="matrix-canvas" role="img" aria-label="Pairwise RMSE heatmap"></canvas><div class="tooltip" id="matrixTooltip"></div></div><p class="figure-note">Darker cells mean larger differences. The diagonal is zero.</p></section>
+ </div>
+ <details class="details-panel below"><summary>What is being calculated?</summary><div class="details-body"><div class="method-grid"><div><p class="method-label">One response distance</p><div class="math-display">d(f, g) = √[ (1 / M) ∑<sub>m=1…M</sub> ( f(x<sub>m</sub>) − g(x<sub>m</sub>) )² ]</div><p id="metricDetail"></p><p>These are fixed, noise-free ground truths. No GP is fitted and no observation noise is added. RMSE measures average difference and can hide local deviations.</p></div><div><p class="method-label">Two spread controls</p><div class="math-display">θ<sub>i,j</sub> ∼ U(θ<sub>base,j</sub> + ρ(ℓ<sub>j</sub> − θ<sub>base,j</sub>), θ<sub>base,j</sub> + ρ(u<sub>j</sub> − θ<sub>base,j</sub>))</div><p>Historical spread ρ shrinks the parameter ranges toward the base function. New-batch spread s moves g from its selected source toward a fixed random anchor. The selected source need not remain the closest after a large change.</p><p>Functions use the same formulas and ranges as the Python examples. This browser uses its own seeded random generator, so the same numeric seed does not reproduce PyTorch's exact samples.</p></div></div><p class="method-label" id="familyFormula"></p><p style="margin-top:10px">Related benchmark families: <a href="https://proceedings.mlr.press/v151/tighineanu22a.html" target="_blank" rel="noopener noreferrer">Tighineanu et al., AISTATS 2022</a>. The spread controls are our implementation extension.</p><div class="param-wrap"><table class="params" id="parameterTable"><caption class="visually-hidden">Current function parameters and generator ranges</caption></table></div><div class="export-menu" style="margin-top:15px"><button class="btn" id="downloadData" type="button">Download parameters &amp; distances</button></div></div></details>
+ <p class="visually-hidden" id="accessibleDistances" aria-live="polite"></p>
+ <footer class="bottom-line"><span id="status" class="status">Ready</span><span>Synthetic response families · Maximization convention</span></footer>
 </main>
+</div>
+<script id="engine">
+'use strict';
+const ResponseLab = (() => {
+ const FAMILIES={
+  forrester:{name:'Forrester',dim:1,params:['a','b','c'],base:[1,0,0],low:[.2,-5,-5],high:[3,15,5],formula:'Negative Forrester: −[a(6x − 2)² sin(12x − 4) + b(x − 0.5) − c], x ∈ [0, 1].'},
+  branin:{name:'Branin',dim:2,params:['a','b','c','r','s','t'],base:[1,5.1/(4*Math.PI**2),5/Math.PI,6,10,1/(8*Math.PI)],low:[.5,.1,1,5,8,.03],high:[1.5,.15,2,7,12,.05],formula:'Negative Branin: −[a(x₂ − bx₁² + cx₁ − r)² + s(1 − t) cos(x₁) + s]. Domain: x₁ ∈ [−5, 10], x₂ ∈ [0, 15].'},
+  hartmann:{name:'Hartmann6',dim:6,params:['α₁','α₂','α₃','α₄'],base:[1,1.2,3,3.2],low:[1,1.18,2.8,3.2],high:[1.02,1.2,3,3.4],formula:'Negated Hartmann6: ∑ᵢ αᵢ exp[−∑ⱼ Aᵢⱼ(xⱼ − Pᵢⱼ)²]. A and P are fixed; only the four α coefficients vary.'}
+ };
+ const A=[[10,3,17,3.5,1.7,8],[.05,10,17,.1,8,14],[3,3.5,1.7,10,17,8],[17,8,.05,10,.1,14]];
+ const P=[[1312,1696,5569,124,8283,5886],[2329,4135,8307,3736,1004,9991],[2348,1451,3522,2883,3047,6650],[4047,8828,8732,5743,1091,381]].map(r=>r.map(v=>v*1e-4));
+ const SOBOL_DIRECTIONS=[[536870912,268435456,134217728,67108864,33554432,16777216,8388608,4194304,2097152,1048576,524288,262144,131072,65536,32768,16384,8192,4096,2048,1024,512,256,128,64,32,16,8,4,2,1],[536870912,805306368,671088640,1006632960,570425344,855638016,713031680,1069547520,538968064,808452096,673710080,1010565120,572653568,858980352,715816960,1073725440,536879104,805318656,671098880,1006648320,570434048,855651072,713042560,1069563840,538976288,808464432,673720360,1010580540,572662306,858993459],[536870912,805306368,402653184,603979776,973078528,385875968,595591168,826277888,438304768,657457152,999817216,358875136,538574848,807862272,406552576,605372416,975183872,389033984,597170176,828646400,437926400,656873216,1002152832,357921088,536885792,805312304,402662296,603992420,973085210,385885991],[536870912,805306368,134217728,335544320,1040187392,486539264,679477248,616562688,908066816,156237824,376963072,968097792,503447552,755171328,545292288,817971200,136568832,340905984,1056606208,494291968,673276416,609457408,922347392,158784320,371195936,961544240,511180808,766771220,537002046,805503005],[536870912,268435456,134217728,738197504,1040187392,922746880,511705088,658505728,379584512,200278016,676855808,1009516544,916586496,468779008,542670848,271499264,144826368,754085888,1054435328,929870848,503351808,654495488,377744768,188970688,681697312,1022521360,920217608,460108844,536906302,268619575],[536870912,268435456,402653184,201326592,838860800,150994944,360710144,1052770304,941621248,470810624,706215936,84672512,665976832,935919616,766869504,586072064,301998080,419434496,226498560,851446784,169882112,353372416,1066931584,1003241152,529676320,735648784,128821784,669173004,900859826,784934857]];
+ function rng(seed){let t=seed>>>0;return()=>{t=(t+0x6D2B79F5)>>>0;let z=t;z=Math.imul(z^(z>>>15),z|1);z^=z+Math.imul(z^(z>>>7),z|61);return((z^(z>>>14))>>>0)/4294967296;};}
+ function generate(family,seed,count,rho,spread,source){
+  const c=FAMILIES[family]; if(!c)throw Error('Choose a valid function family.');
+  if(!Number.isInteger(seed)||seed<0||seed>4294967295)throw Error('Seed must be an integer from 0 to 4,294,967,295.');
+  if(!Number.isInteger(count)||count<2||count>8||source<0||source>=count)throw Error('Choose 2–8 historical functions and a valid source.');
+  if(rho<0||rho>1||spread<0||spread>1)throw Error('Spread must be between 0 and 1.');
+  const oldRng=rng(seed),targetRng=rng((seed+1)>>>0);
+  const params=Array.from({length:count},()=>c.base.map((b,j)=>{const lo=b+rho*(c.low[j]-b),hi=b+rho*(c.high[j]-b);return lo+(hi-lo)*oldRng();}));
+  const anchor=c.low.map((v,j)=>v+(c.high[j]-v)*targetRng());
+  const target=params[source].map((v,j)=>v+spread*(anchor[j]-v));
+  return {params,target,anchor,all:[...params,target]};
+ }
+ function evaluate(family,x,p){
+  if(family==='forrester'){const u=Array.isArray(x)?x[0]:x;return -(p[0]*(6*u-2)**2*Math.sin(12*u-4)+p[1]*(u-.5)-p[2]);}
+  if(family==='branin'){const [a,b,c,r,s,t]=p;return -(a*(x[1]-b*x[0]**2+c*x[0]-r)**2+s*(1-t)*Math.cos(x[0])+s);}
+  let total=0;for(let i=0;i<4;i++){let z=0;for(let j=0;j<6;j++)z+=A[i][j]*(x[j]-P[i][j])**2;total+=p[i]*Math.exp(-z);}return total;
+ }
+ function sobolPoints(n,seed){
+  const random=rng(seed),shift=Array.from({length:6},()=>Math.floor(random()*1073741824));
+  const v=Array(6).fill(0),out=[];
+  for(let i=0;i<n;i++){if(i>0){let z=i,c=0;while((z&1)===0){c++;z>>>=1;}for(let d=0;d<6;d++)v[d]^=SOBOL_DIRECTIONS[d][c];}out.push(v.map((z,d)=>(z^shift[d])/1073741824));}
+  return out;
+ }
+ function locations(family,resolution,seed){
+  if(family==='forrester')return Array.from({length:resolution},(_,i)=>[i/(resolution-1)]);
+  if(family==='branin'){const out=[];for(let j=0;j<resolution;j++)for(let i=0;i<resolution;i++)out.push([-5+15*i/(resolution-1),15*j/(resolution-1)]);return out;}
+  return sobolPoints(resolution,(seed+3)>>>0);
+ }
+ function compare(family,all,points){
+  const values=all.map(p=>Float64Array.from(points,x=>evaluate(family,x,p))),n=all.length;
+  const matrix=Array.from({length:n},()=>Array(n).fill(0));
+  for(let i=0;i<n;i++)for(let j=0;j<i;j++){let sum=0;for(let m=0;m<points.length;m++)sum+=(values[i][m]-values[j][m])**2;matrix[i][j]=matrix[j][i]=Math.sqrt(sum/points.length);}
+  return {values,matrix,distances:matrix[n-1].slice(0,-1)};
+ }
+ return {FAMILIES,A,P,rng,generate,evaluate,sobolPoints,locations,compare};
+})();
+</script>
+<script id="interface">
+'use strict';
+(() => {
+ const $=id=>document.getElementById(id),sub=['₁','₂','₃','₄','₅','₆','₇','₈'];
+ const palette=['#267b71','#d29440','#6574b3','#ba6570','#66943f','#986fa4','#498cbb','#a17950'];
+ const state={family:'forrester',seed:123,count:5,source:0,rho:1,spread:.2,resolution:201,mode:'response'};
+ let data=null,hidden=new Set(),lineBox=null,barBoxes=[],matrixBox=null,renderTimer=0,resizeTimer=0,exporting=false;
+ const resolutions={forrester:[[101,'101 grid points'],[201,'201 grid points'],[401,'401 grid points']],branin:[[41,'41 × 41 grid'],[65,'65 × 65 grid'],[101,'101 × 101 grid']],hartmann:[[1024,'1,024 Sobol points'],[4096,'4,096 Sobol points'],[16384,'16,384 Sobol points']]};
+ const defaults={forrester:201,branin:65,hartmann:4096};
+ function label(i){return i===state.count?'g':'f'+(i+1);}
+ function fmt(x,digits=3){if(x===0||Math.abs(x)<1e-13)return '0';if(Math.abs(x)<.001)return x.toExponential(2);if(Math.abs(x)>=1000)return x.toLocaleString('en-US',{maximumFractionDigits:1});return Number(x.toFixed(digits)).toString();}
+ function color(i){return i===state.count?'#233730':palette[i];}
+ function sourceOptions(){const select=$('source');select.replaceChildren();for(let i=0;i<state.count;i++){const o=document.createElement('option');o.value=i;o.textContent='f'+(i+1);select.append(o);}select.value=state.source;}
+ function resolutionOptions(){const select=$('resolution');select.replaceChildren();for(const [v,text] of resolutions[state.family]){const o=document.createElement('option');o.value=v;o.textContent=text;select.append(o);}select.value=state.resolution;}
+ function syncControls(){
+  $('seed').value=state.seed;$('count').value=state.count;sourceOptions();resolutionOptions();
+  $('oldSpread').value=state.rho;$('oldValue').value=state.rho.toFixed(2);$('gSpread').value=state.spread;$('gValue').value=state.spread.toFixed(2);$('surfaceMode').value=state.mode;
+  document.querySelectorAll('[data-family]').forEach(el=>{const active=el.dataset.family===state.family;el.classList.toggle('active',active);el.setAttribute('aria-pressed',String(active));});
+ }
+ function showError(text){$('error').hidden=!text;$('error').textContent=text;}
+ function build(){
+  try{
+   const generated=ResponseLab.generate(state.family,state.seed,state.count,state.rho,state.spread,state.source);
+   const points=ResponseLab.locations(state.family,state.resolution,state.seed),comparison=ResponseLab.compare(state.family,generated.all,points);
+   const order=comparison.distances.map((_,i)=>i).sort((a,b)=>comparison.distances[a]-comparison.distances[b]);
+   const best=comparison.distances[order[0]],tieTol=1e-10*Math.max(1,...comparison.distances);
+   const closest=order.filter(i=>Math.abs(comparison.distances[i]-best)<=tieTol);
+   data={...generated,...comparison,points,order,closest};showError('');render();
+  }catch(error){showError(error.message);}
+ }
+ function schedule(){clearTimeout(renderTimer);renderTimer=setTimeout(build,90);}
+ function render(){
+  if(!data)return;const f=state.family,isLine=f==='forrester',isSurface=f==='branin',isHart=f==='hartmann',M=data.points.length;
+  $('functionPanel').hidden=isHart;$('hartmannNote').hidden=!isHart;$('lineArea').hidden=!isLine;$('legend').hidden=!isLine;$('legendHint').hidden=!isLine;$('surfaces').hidden=!isSurface;$('surfaceScale').hidden=!isSurface;$('surfaceMode').hidden=!isSurface;$('curveCount').hidden=isSurface;
+  $('plotTitle').textContent=isSurface?'Response surfaces, side by side':'The response family';
+  $('plotSubtitle').textContent=isSurface?(state.mode==='response'?'The same input domain and color scale for every function.':'Each panel shows its response minus g at the same setting.'):`${state.count} historical curves and one smooth new batch.`;
+  $('curveCount').textContent=`1 input · ${state.count+1} functions`;
+  $('parentStat').innerHTML=label(state.source)+' <small>historical source</small>';
+  const closeText=data.closest.length===state.count?'All tied':data.closest.map(label).join(', ');
+  $('closestStat').innerHTML=`${closeText} <small>RMSE ${fmt(data.distances[data.order[0]],5)}</small>`;
+  $('pointsStat').innerHTML=`${M.toLocaleString('en-US')} <small>${isHart?'Sobol points':'grid points'}</small>`;
+  $('resolutionHelp').textContent=isHart?'A digitally shifted Sobol design spans all six inputs.':'All functions are compared at the same grid locations.';
+  $('functionNote').textContent=isLine?'The dashed dark curve is g. The light shaded area shows its difference from the generating source.':(state.mode==='response'?'Color represents the function value; contour lines mark equal responses.':'Zero means local agreement. Blue and orange show negative and positive differences from g.');
+  const parentClosest=data.closest.includes(state.source);
+  $('rankNote').textContent=data.closest.length>1?`${closeText} at the displayed precision. The generating source is ${label(state.source)}.`:(parentClosest?`${label(state.source)} is both the generating source and the closest historical response.`:`Generated from ${label(state.source)}, but ${label(data.order[0])} is closest over these locations.`);
+  $('metricDetail').textContent=`Here M = ${M.toLocaleString('en-US')}. ${isHart?'RMSE is a uniform-domain approximation on a digitally shifted 6D Sobol design.':'RMSE is computed on the displayed regular grid.'} Distances use response units, not percentages. Change the resolution to check numerical sensitivity.`;
+  $('familyFormula').textContent=ResponseLab.FAMILIES[f].formula;
+  $('status').textContent=`${ResponseLab.FAMILIES[f].name} · Seed ${state.seed} · ρ ${state.rho.toFixed(2)} · s ${state.spread.toFixed(2)}`;
+  $('accessibleDistances').textContent='RMSE to g: '+data.distances.map((d,i)=>label(i)+' '+d.toPrecision(6)).join('; ')+'. Closest: '+closeText+'.';
+  renderParameters();if(isLine){renderLegend();drawLines();}if(isSurface)drawSurfaces();drawBars();drawMatrix();
+ }
+ function setup(canvas,width,height){
+  const rect=canvas.getBoundingClientRect();const w=width||rect.width||600,h=height||rect.height||300,dpr=Math.min(window.devicePixelRatio||1,2);
+  canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);const c=canvas.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.fillStyle='#fff';c.fillRect(0,0,w,h);c.font='11px system-ui, sans-serif';return {c,w,h};
+ }
+ function text(c,t,x,y,align='left',fill='#71817a',font='11px system-ui, sans-serif'){c.font=font;c.fillStyle=fill;c.textAlign=align;c.textBaseline='middle';c.fillText(t,x,y);}
+ function line(c,x1,y1,x2,y2,stroke='#e7ece7',width=1){c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.strokeStyle=stroke;c.lineWidth=width;c.stroke();}
+ function range(values){let min=Infinity,max=-Infinity;for(const v of values){if(v<min)min=v;if(v>max)max=v;}return [min,max];}
+ function renderLegend(){
+  $('legend').replaceChildren();for(let i=0;i<=state.count;i++){const b=document.createElement('button');b.type='button';b.className='legend-chip'+(i===state.count?' target':'')+(hidden.has(i)?' off':'');b.style.setProperty('--series',color(i));b.setAttribute('aria-pressed',String(!hidden.has(i)));b.innerHTML=`<span class="swatch"></span>${label(i)}${i===state.source?' · source':i===state.count?' · new batch':''}`;b.addEventListener('click',()=>{if(hidden.has(i))hidden.delete(i);else hidden.add(i);renderLegend();drawLines();});$('legend').append(b);}
+ }
+ function drawLines(hoverX=null){
+  const {c,w,h}=setup($('lineCanvas')),p={l:57,r:18,t:17,b:43},pw=w-p.l-p.r,ph=h-p.t-p.b;
+  const visible=data.values.filter((_,i)=>!hidden.has(i));let [min,max]=range(visible.flatMap(v=>Array.from(v)));if(!visible.length){min=-1;max=1;}const pad=Math.max((max-min)*.07,.1);min-=pad;max+=pad;
+  const xx=x=>p.l+x*pw,yy=y=>p.t+(max-y)/(max-min)*ph;lineBox={...p,w:pw,h:ph,min,max};
+  for(let j=0;j<=5;j++){const val=min+(max-min)*j/5,y=yy(val);line(c,p.l,y,w-p.r,y);text(c,fmt(val,1),p.l-10,y,'right');}
+  for(let j=0;j<=5;j++){const val=j/5,x=xx(val);text(c,fmt(val,1),x,h-25,'center');line(c,x,p.t,x,h-p.b,'#f0f3ef');}text(c,'x',p.l+pw/2,h-7,'center');text(c,'Response',p.l,p.t-9,'left','#62756a','10px system-ui');
+  c.save();c.beginPath();c.rect(p.l,p.t,pw,ph);c.clip();
+  if(!hidden.has(state.source)&&!hidden.has(state.count)){c.beginPath();data.points.forEach((x,i)=>{const a=xx(x[0]),b=yy(data.values[state.source][i]);i?c.lineTo(a,b):c.moveTo(a,b);});for(let i=data.points.length-1;i>=0;i--)c.lineTo(xx(data.points[i][0]),yy(data.values[state.count][i]));c.closePath();c.fillStyle='#74857914';c.fill();}
+  for(let k=0;k<=state.count;k++){if(hidden.has(k))continue;c.beginPath();data.points.forEach((x,i)=>{const a=xx(x[0]),b=yy(data.values[k][i]);i?c.lineTo(a,b):c.moveTo(a,b);});c.strokeStyle=color(k);c.lineWidth=k===state.count?2.7:1.9;c.setLineDash(k===state.count?[7,4]:[]);c.stroke();}c.setLineDash([]);
+  if(hoverX!==null){line(c,xx(hoverX),p.t,xx(hoverX),h-p.b,'#a6b6a9',1);for(let k=0;k<=state.count;k++){if(hidden.has(k))continue;const y=ResponseLab.evaluate('forrester',[hoverX],data.all[k]);c.beginPath();c.arc(xx(hoverX),yy(y),3.4,0,Math.PI*2);c.fillStyle=color(k);c.fill();c.strokeStyle='#fff';c.lineWidth=1;c.stroke();}}c.restore();
+ }
+ const stops=[[0,[23,56,79]],[.25,[40,107,131]],[.5,[66,155,136]],[.75,[169,197,111]],[1,[247,220,124]]];
+ function rgb(t,diff=false){t=Math.max(0,Math.min(1,t));const s=diff?[[0,[37,103,150]],[.5,[249,249,239]],[1,[197,102,49]]]:stops;let k=1;while(k<s.length-1&&t>s[k][0])k++;const u=(t-s[k-1][0])/(s[k][0]-s[k-1][0]);return s[k][1].map((v,j)=>Math.round(s[k-1][1][j]+u*(v-s[k-1][1][j])));}
+ function contours(c,vals,n,box,levels){
+  const dx=box.w/(n-1),dy=box.h/(n-1);c.lineWidth=.65;c.strokeStyle='#ffffff60';
+  for(const level of levels){c.beginPath();for(let j=0;j<n-1;j++)for(let i=0;i<n-1;i++){
+   const vs=[vals[j*n+i],vals[j*n+i+1],vals[(j+1)*n+i+1],vals[(j+1)*n+i]],cs=[[i,j],[i+1,j],[i+1,j+1],[i,j+1]],hits=[];
+   for(let e=0;e<4;e++){const q=(e+1)%4;if((vs[e]<level)!==(vs[q]<level)){const t=(level-vs[e])/(vs[q]-vs[e]);hits.push([box.x+(cs[e][0]+t*(cs[q][0]-cs[e][0]))*dx,box.y+box.h-(cs[e][1]+t*(cs[q][1]-cs[e][1]))*dy]);}}
+   for(let k=0;k+1<hits.length;k+=2){c.moveTo(...hits[k]);c.lineTo(...hits[k+1]);}
+  }c.stroke();}
+ }
+ function drawSurfaces(){
+  const n=state.resolution,diff=state.mode==='difference',grids=data.values.map(v=>diff?Float64Array.from(v,(z,i)=>z-data.values[state.count][i]):v);let lo=Infinity,hi=-Infinity;
+  grids.forEach(v=>{const [a,b]=range(v);lo=Math.min(lo,a);hi=Math.max(hi,b);});if(diff){hi=Math.max(Math.abs(lo),Math.abs(hi));lo=-hi;}if(hi-lo<1e-12){lo=diff?-1:lo-1;hi=diff?1:hi+1;}
+  $('scaleMin').textContent=fmt(lo,2);$('scaleMax').textContent=fmt(hi,2);$('gradient').style.background=diff?'linear-gradient(90deg,#256796,#f9f9ef,#c56631)':'';$('scaleLabel').textContent=diff?'Shared scale · response − g · center = 0':'Shared response scale · larger values are lighter';
+  const host=$('surfaces');host.replaceChildren();
+  grids.forEach((vals,k)=>{
+   const card=document.createElement('div');card.className='surface-card'+(k===state.count?' target-card':'');card.style.setProperty('--series',color(k));
+   card.innerHTML=`<div class="surface-head"><span class="surface-dot"></span>${label(k)}<span class="mini">${k===state.count?'new batch':k===state.source?'generating source':'historical'}</span></div>`;
+   const canvas=document.createElement('canvas');canvas.className='surface-canvas';canvas.setAttribute('role','img');canvas.setAttribute('aria-label',`Branin ${label(k)} ${diff?'difference from g':'response surface'}`);card.append(canvas);host.append(card);
+   const {c,w,h}=setup(canvas),box={x:32,y:12,w:w-44,h:h-44};
+   const off=document.createElement('canvas');off.width=n;off.height=n;const oc=off.getContext('2d'),img=oc.createImageData(n,n);
+   for(let j=0;j<n;j++)for(let i=0;i<n;i++){const col=rgb((vals[j*n+i]-lo)/(hi-lo),diff),p=((n-1-j)*n+i)*4;img.data[p]=col[0];img.data[p+1]=col[1];img.data[p+2]=col[2];img.data[p+3]=255;}oc.putImageData(img,0,0);c.imageSmoothingEnabled=true;c.drawImage(off,box.x,box.y,box.w,box.h);
+   const levels=Array.from({length:10},(_,i)=>lo+(hi-lo)*(i+1)/11);contours(c,vals,n,box,levels);
+   for(const x of [-5,0,5,10])text(c,String(x),box.x+(x+5)/15*box.w,h-21,'center','#748578','9px system-ui');for(const y of [0,5,10,15])text(c,String(y),box.x-7,box.y+box.h-y/15*box.h,'right','#748578','9px system-ui');text(c,'x1',box.x+box.w/2,h-6,'center','#627568','9px system-ui');text(c,'x2',13,box.y-2,'center','#627568','9px system-ui');
+   canvas.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect(),u=Math.max(0,Math.min(1,(e.clientX-r.left-box.x)/box.w)),v=Math.max(0,Math.min(1,1-(e.clientY-r.top-box.y)/box.h));const point=[-5+15*u,15*v],z=ResponseLab.evaluate('branin',point,data.all[k])-(diff?ResponseLab.evaluate('branin',point,data.target):0);canvas.title=`${label(k)} · x₁=${point[0].toFixed(2)}, x₂=${point[1].toFixed(2)} · ${diff?'difference':'response'}=${z.toFixed(3)}`;});
+  });
+ }
+ function drawBars(){
+  const {c,w,h}=setup($('barCanvas')),p={l:36,r:77,t:18,b:34},pw=w-p.l-p.r,ph=h-p.t-p.b,step=ph/state.count,max=Math.max(...data.distances),end=max>0?max*1.07:1;
+  for(let j=0;j<=4;j++){const x=p.l+pw*j/4;line(c,x,p.t-3,x,h-p.b,'#e9eee8');text(c,fmt(end*j/4,4),x,h-19,'center','#788a7b','9px system-ui');}barBoxes=[];
+  for(let k=0;k<state.count;k++){const y=p.t+step*k+step*.15,bh=step*.57,barw=pw*data.distances[k]/end;const best=data.closest.includes(k);text(c,label(k),p.l-10,y+bh/2,'right','#31463a','12px system-ui');c.fillStyle='#f2f5ef';c.fillRect(p.l,y,pw,bh);c.fillStyle=palette[k];c.globalAlpha=best?1:.69;c.fillRect(p.l,y,barw,bh);c.globalAlpha=1;if(best){c.strokeStyle='#234e3d';c.lineWidth=1.3;c.strokeRect(p.l-.5,y-.5,Math.max(barw,1)+1,bh+1);}text(c,fmt(data.distances[k],5),p.l+barw+7,y+bh/2,'left',best?'#264d36':'#63766b','11px ui-monospace, monospace');barBoxes.push({x:p.l,y,w:pw,h:step*.85,k});}
+  text(c,'RMSE',w-p.r+14,h-18,'left','#7e8d81','9px system-ui');
+ }
+ function drawMatrix(){
+  const {c,w,h}=setup($('matrixCanvas')),n=state.count+1,side=Math.min(w-54,h-37),cell=side/n,x=(w-side)/2+13,y=28,max=Math.max(...data.matrix.flat()),limit=max||1;matrixBox={x,y,cell,side};
+  for(let i=0;i<n;i++){text(c,label(i),x+(i+.5)*cell,y-13,'center','#435849','11px system-ui');text(c,label(i),x-14,y+(i+.5)*cell,'right','#435849','11px system-ui');for(let j=0;j<n;j++){const v=data.matrix[i][j]/limit,rr=Math.round(241+(27-241)*v),gg=Math.round(246+(99-246)*v),bb=Math.round(239+(75-239)*v);c.fillStyle=`rgb(${rr},${gg},${bb})`;c.fillRect(x+j*cell,y+i*cell,cell,cell);c.strokeStyle='#ffffff';c.lineWidth=1.5;c.strokeRect(x+j*cell,y+i*cell,cell,cell);if(cell>=25)text(c,fmt(data.matrix[i][j],v===0?0:3),x+(j+.5)*cell,y+(i+.5)*cell,'center',v>.57?'#fff':'#45644c',`${cell<37?8:cell<48?9:10}px ui-monospace, monospace`);}}
+ }
+ function renderParameters(){
+  const conf=ResponseLab.FAMILIES[state.family],t=$('parameterTable');t.replaceChildren();const head=document.createElement('thead');head.innerHTML='<tr><th scope="col">Function / range</th>'+conf.params.map(v=>`<th scope="col">${v}</th>`).join('')+'</tr>';t.append(head);const body=document.createElement('tbody');for(const [name,p] of [...data.all.map((p,i)=>[label(i),p]),['Base',conf.base],['Full lower',conf.low],['Full upper',conf.high]]){const row=document.createElement('tr');row.innerHTML=`<th scope="row">${name}</th>`+p.map(v=>`<td>${v.toFixed(6)}</td>`).join('');body.append(row);}t.append(body);
+ }
+ function positionTip(el,e,content){const r=el.parentElement.getBoundingClientRect();el.innerHTML=content;el.style.display='block';el.style.left=Math.max(4,Math.min(e.clientX-r.left+14,r.width-el.offsetWidth-6))+'px';el.style.top=Math.max(4,Math.min(e.clientY-r.top+10,r.height-el.offsetHeight-4))+'px';}
+ $('lineCanvas').addEventListener('pointermove',e=>{if(!lineBox)return;const r=$('lineCanvas').getBoundingClientRect(),u=(e.clientX-r.left-lineBox.l)/lineBox.w;if(u<0||u>1){$('lineTooltip').style.display='none';drawLines();return;}drawLines(u);let html=`<div class="tip-head">x = ${u.toFixed(3)}</div>`;for(let k=0;k<=state.count;k++)if(!hidden.has(k)){const val=ResponseLab.evaluate('forrester',[u],data.all[k]);html+=`<div class="tip-line"><span>${label(k)}</span><span class="mono">${val.toFixed(3)}</span></div>`;}positionTip($('lineTooltip'),e,html);});
+ $('lineCanvas').addEventListener('pointerleave',()=>{$('lineTooltip').style.display='none';drawLines();});
+ $('barCanvas').addEventListener('pointermove',e=>{const r=$('barCanvas').getBoundingClientRect(),y=e.clientY-r.top,b=barBoxes.find(v=>y>=v.y&&y<=v.y+v.h);if(b)positionTip($('barTooltip'),e,`${label(b.k)} ↔ g<br><strong class="mono">${data.distances[b.k].toPrecision(8)}</strong>`);else $('barTooltip').style.display='none';});
+ $('barCanvas').addEventListener('pointerleave',()=>{$('barTooltip').style.display='none';});
+ $('matrixCanvas').addEventListener('pointermove',e=>{if(!matrixBox)return;const r=$('matrixCanvas').getBoundingClientRect(),j=Math.floor((e.clientX-r.left-matrixBox.x)/matrixBox.cell),i=Math.floor((e.clientY-r.top-matrixBox.y)/matrixBox.cell);if(i>=0&&j>=0&&i<=state.count&&j<=state.count)positionTip($('matrixTooltip'),e,`${label(i)} ↔ ${label(j)}<br><strong class="mono">${data.matrix[i][j].toPrecision(8)}</strong>`);else $('matrixTooltip').style.display='none';});
+ $('matrixCanvas').addEventListener('pointerleave',()=>{$('matrixTooltip').style.display='none';});
+ document.querySelectorAll('[data-family]').forEach(btn=>btn.addEventListener('click',()=>{state.family=btn.dataset.family;state.resolution=defaults[state.family];hidden.clear();syncControls();build();}));
+ $('seed').addEventListener('change',()=>{const seed=Number($('seed').value);if($('seed').value===''||!Number.isInteger(seed)||seed<0||seed>4294967295){showError('Enter an integer seed between 0 and 4,294,967,295.');return;}state.seed=seed;hidden.clear();build();});
+ $('newSeed').addEventListener('click',()=>{state.seed=(state.seed+1)>>>0;$('seed').value=state.seed;hidden.clear();build();});
+ $('count').addEventListener('change',()=>{state.count=Number($('count').value);state.source=Math.min(state.source,state.count-1);hidden.clear();sourceOptions();build();});
+ $('source').addEventListener('change',()=>{state.source=Number($('source').value);build();});
+ $('oldSpread').addEventListener('input',()=>{state.rho=Number($('oldSpread').value);$('oldValue').value=state.rho.toFixed(2);schedule();});
+ $('gSpread').addEventListener('input',()=>{state.spread=Number($('gSpread').value);$('gValue').value=state.spread.toFixed(2);schedule();});
+ $('resolution').addEventListener('change',()=>{state.resolution=Number($('resolution').value);build();});
+ $('surfaceMode').addEventListener('change',()=>{state.mode=$('surfaceMode').value;render();});
+ $('reset').addEventListener('click',()=>{Object.assign(state,{seed:123,count:5,source:0,rho:1,spread:.2,resolution:defaults[state.family],mode:'response'});hidden.clear();syncControls();build();});
+ function download(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);}
+ function toast(msg){const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=msg;document.body.append(t);setTimeout(()=>t.remove(),3000);}
+ $('downloadData').addEventListener('click',()=>{const payload={settings:{...state},convention:'maximization',parameters:data.all,labels:data.all.map((_,i)=>label(i)),target_anchor:data.anchor,rmse_to_g:data.distances,pairwise_rmse:data.matrix,closest_indices_one_based:data.closest.map(i=>i+1),comparison_points:data.points,random_generator:'mulberry32; independent target seed +1',integration:state.family==='hartmann'?'digitally shifted Sobol, seed +3':'regular grid',notes:'No observation noise or GP uncertainty. Same numeric seed differs from torch.Generator.'};download(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),`${state.family}_seed${state.seed}_similarity.json`);});
+ $('downloadHtml').addEventListener('click',()=>{
+  // Reset a cloned DOM to the reusable page structure; scripts generate charts on load.
+  const clone=document.documentElement.cloneNode(true);clone.querySelectorAll('.toast').forEach(n=>n.remove());clone.querySelectorAll('.tooltip').forEach(n=>n.style.display='none');const preset=clone.querySelector('#savedPreset');if(preset)preset.remove();const script=document.createElement('script');script.id='savedPreset';script.textContent='window.RESPONSE_LAB_PRESET='+JSON.stringify(state)+';';clone.querySelector('#interface').before(script);download(new Blob(['<!doctype html>\n'+clone.outerHTML],{type:'text/html'}),'response-similarity-lab.html');toast('HTML saved. Open it directly in your browser.');
+ });
+ $('exportBtn').addEventListener('click',async()=>{
+  if(exporting)return;exporting=true;$('exportBtn').disabled=true;
+  try{
+   // Flush slider changes and remove a hover guide before capturing the current view.
+   clearTimeout(renderTimer);build();if(state.family==='forrester')drawLines();
+   const W=1500,pad=60,isLine=state.family==='forrester',isSurface=state.family==='branin';
+   const surfaceRows=Math.ceil((state.count+1)/3),plotH=isLine?420:isSurface?surfaceRows*295+70:0,top=130,chartY=top+plotH+36,H=chartY+480+75;
+   const out=document.createElement('canvas');out.width=W;out.height=H;const c=out.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,W,H);
+   text(c,`${ResponseLab.FAMILIES[state.family].name} · Response similarity`,pad,45,'left','#203532','bold 30px system-ui');
+   text(c,`${state.count} historical functions + g  |  seed ${state.seed}  |  historical spread ${state.rho.toFixed(2)}  |  new-batch spread ${state.spread.toFixed(2)}  |  source ${label(state.source)}`,pad,85,'left','#65776a','16px system-ui');
+   if(isLine){const canvas=$('lineCanvas');c.drawImage(canvas,pad,top,W-pad*2,350);let x=pad;for(let k=0;k<=state.count;k++){if(hidden.has(k))continue;line(c,x,top+383,x+24,top+383,color(k),3);text(c,label(k)+(k===state.source?' (source)':k===state.count?' (new)':''),x+33,top+383,'left','#304c38','15px system-ui');x+=150;}}
+   if(isSurface){const canvases=Array.from(document.querySelectorAll('.surface-canvas')),cw=(W-2*pad-40)/3;canvases.forEach((canvas,k)=>{const x=pad+(k%3)*(cw+20),y=top+Math.floor(k/3)*295;text(c,label(k)+(k===state.source?' · source':k===state.count?' · new batch':''),x+10,y+9,'left',color(k),'bold 17px system-ui');c.drawImage(canvas,x,y+25,cw,255);});text(c,`${state.mode==='difference'?'Difference from g':'Response'}: shared color scale ${$('scaleMin').textContent} to ${$('scaleMax').textContent}`,pad,top+plotH-16,'left','#667b6b','15px system-ui');}
+   text(c,'RMSE to g',pad,chartY,'left','#203532','bold 20px system-ui');text(c,'Pairwise RMSE',W/2+30,chartY,'left','#203532','bold 20px system-ui');
+   c.drawImage($('barCanvas'),pad,chartY+25,W/2-pad-25,410);c.drawImage($('matrixCanvas'),W/2+20,chartY+25,W/2-pad-20,410);
+   text(c,`RMSE uses ${data.points.length.toLocaleString('en-US')} shared ${state.family==='hartmann'?'6D Sobol':'grid'} locations. Fixed, noise-free responses; lower is closer.`,pad,H-36,'left','#687c6c','15px system-ui');
+   out.toBlob(blob=>{if(blob){download(blob,`${state.family}_similarity_seed${state.seed}.png`);toast('Figure saved for your presentation.');}else toast('Could not export the figure.');},'image/png');
+  }catch(error){showError('Export failed: '+error.message);}finally{exporting=false;$('exportBtn').disabled=false;}
+ });
+ window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(render,120);});
+ if(window.RESPONSE_LAB_PRESET){const p=window.RESPONSE_LAB_PRESET;if(ResponseLab.FAMILIES[p.family])Object.assign(state,p);}
+ syncControls();build();
+})();
+</script>
 </body>
 </html>
